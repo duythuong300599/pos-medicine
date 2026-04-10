@@ -1,0 +1,65 @@
+version: '1.0'
+project_type: new-project
+track: default
+phase: implementation
+status: active
+current_step: cooking
+next_action: Run /cook in a fresh session.
+owner: duythuong
+champions: []
+artifacts:
+  workflow_status: plans/workflow-status.yaml
+  sprint_status: plans/sprint-status.yaml
+  project_context: docs/project-context.md
+  scan_report: plans/project-scan-report.json
+  work_items: plans/work-items.yaml
+  sharded_index: docs/sharded/index.md
+kpi_baseline:
+  adoption_rate: 0.0
+  lead_time_days: 0.0
+  test_pass_rate: 0.0
+  regression_reopen_rate: 0.0
+signals:
+  gate_policy: guided
+  scan_completed: true
+  scan_meaningful: true
+  planning_ready: true
+  readiness_passed: true
+  quality_gate_passed: true
+  lint_passed: true
+  typecheck_passed: true
+  build_passed: true
+  tests_passed: true
+  ui_smoke_passed: true
+  security_passed: true
+  last_reported_commit: ''
+  last_reported_branch: ''
+  last_reported_commit_at: ''
+  commit_report_path: ''
+  commit_report_source: ''
+  bootstrap_completed_at: ''
+  bootstrap_session_id: ''
+  bootstrap_status: ''
+  bootstrap_actions_run: []
+  bootstrap_report: ''
+  updated_at: '2026-04-10T04:33:41+00:00'
+  scan_mode: deep
+  scan_report: plans/project-scan-report.json
+  last_heartbeat_at: '2026-04-10T04:33:41+00:00'
+  last_major_command: /cook
+  last_major_command_at: '2026-04-09T05:01:59+00:00'
+  readiness_report: plans/260409-1136-pos-medicine-mvp/reports/readiness-report.json
+  planning_report: plans/260409-1126-workflow-init/reports/readiness-report.json
+  readiness_scope: medium
+  quality_gate_report: plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.json
+updated_at: '2026-04-10T04:33:41+00:00'
+created_at: '2026-04-09T04:29:19+00:00'
+derived_evidence:
+- current_step=cooking -> phase=implementation (lifecycle-managed)
+next_action_struct:
+  command: /cook
+  reason: Execute approved implementation plan.
+  requires_new_session: true
+  session_guidance: Run this step in a fresh session for cleaner context. Use /clear
+    or open a new terminal and run claude --resume.
+lifecycle_state: cooking

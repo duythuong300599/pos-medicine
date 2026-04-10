@@ -1,0 +1,37 @@
+version: '1.0'
+plan_id: 260409-1136-pos-medicine-mvp
+plan_file: plans/260409-1136-pos-medicine-mvp/plan.md
+status: not-started
+summary:
+  total_phases: 6
+  completed: 0
+  in_progress: 0
+  pending: 6
+active_phase:
+  phase_id: '1'
+  phase_label: Project Setup
+  file: plans/260409-1136-pos-medicine-mvp/phase-1-project-setup.md
+  status: not-started
+  checklist_open: 7
+phases:
+- id: '1'
+  label: Project Setup
+  status: not-started
+- id: '2'
+  label: Product Catalog
+  status: not-started
+- id: '3'
+  label: Cart Checkout
+  status: not-started
+- id: '4'
+  label: Transaction History
+  status: not-started
+- id: '5'
+  label: Inventory
+  status: not-started
+- id: '6'
+  label: Polish Qa
+  status: not-started
+progress_pct: 0.0
+updated_at: '2026-04-09T10:06:47+00:00'
+created_at: '2026-04-09T04:56:11+00:00'

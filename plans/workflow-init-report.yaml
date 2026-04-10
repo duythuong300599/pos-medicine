@@ -1,0 +1,80 @@
+project_root: /Users/duythuong/Documents/DuyTCode/pos-medicine
+detected_case: greenfield
+confidence: 0.95
+evidence:
+- artifact_count=0/5
+- existing_artifacts=none
+- missing_artifacts=workflow_status,scan_report,work_items,project_context,sharded_index
+- has_source=False
+- no_source_footprint_detected
+- 'workflow-status.yaml: file missing → fix: /workflow-init --apply'
+- 'project-scan-report.json: file missing → fix: /document-project'
+- 'work-items.yaml: file missing → fix: /workflow-init --apply'
+- 'project-context.md: file missing → fix: /workflow-init --apply'
+- 'docs/sharded/index.md: file missing → fix: /workflow-init --apply'
+recommended_project_type: new-project
+effective_project_type: new-project
+recommended_next_actions:
+- Run /workflow-init --apply --project-type new-project
+- Run /brainstorm and capture decisions in docs/project-context.md
+- Run /workflow-status --sync
+- Run /plan
+execution_profile: apply-custom
+apply_performed: true
+next_action: Run /workflow-status --sync.
+next_action_struct:
+  command: /workflow-status --sync
+  reason: Refresh workflow state before discovery.
+  requires_new_session: false
+  session_guidance: Same session is acceptable for this step.
+interview: []
+user_confirmation: assumed-explicit-apply
+statuses:
+  plans/workflow-status.yaml: updated
+  plans/project-scan-report.json: updated
+  plans/project-scan-report.yaml: updated
+  docs/project-context.md: updated
+  docs/sharded/index.md: updated
+  CLAUDE.md: created
+  AGENTS.md: created
+  .claude/settings.local.json: created
+  .gitignore (.claude/settings.local.json): created
+  .gitignore (CLAUDE.md): updated
+  .gitignore (AGENTS.md): updated
+  plans/work-items.yaml: created
+  plans/260409-1126-workflow-init/context/project-context-snapshot.md: updated
+  plans/260409-1126-workflow-init/brainstorm/decision-handoff.json: updated
+workflow_init_report: plans/workflow-init-report.json
+workflow_init_report_yaml: plans/workflow-init-report.yaml
+markdown_report: null
+generated_at: '2026-04-09T04:29:19+00:00'
+brainstorm_recommendation:
+  recommended_depth: basic
+  recommended_session_pattern: single-loop (problem/scope/constraints + acceptance
+    criteria)
+  score: 3
+  confidence: 0.72
+  factors:
+  - '[+3] requirement_signal=missing'
+  requirement_signal:
+    status: missing
+    signals_found: []
+    missing_signals:
+    - problem_statement
+    - scope
+    - constraints
+  required_clarifications:
+  - Confirm explicit problem statement and expected business outcome.
+  - Confirm in-scope vs out-of-scope boundaries for first delivery.
+  - 'Confirm constraints: timeline, compliance, risk tolerance, and budget.'
+  requires_user_confirmation: true
+  decision_status: pending_user_confirmation
+  policy: advisory-only
+  generated_at: '2026-04-09T04:29:19+00:00'
+work_items_registry: plans/work-items.yaml
+active_work_item_id: 260409-1126-workflow-init
+active_work_item_path: plans/260409-1126-workflow-init
+legacy_migration:
+  migrated: 0
+  active_item_id: ''
+  items: 0

@@ -1,0 +1,26 @@
+version: '1.0'
+active_item_id: 260409-web-migration
+items:
+- id: 260409-1126-workflow-init
+  path: plans/260409-1126-workflow-init
+  state: planning
+  created_at: '2026-04-09T04:29:19+00:00'
+  updated_at: '2026-04-09T04:36:31+00:00'
+  project_type: new-project
+  handoff_status: ready_for_plan
+- id: 260409-1136-pos-medicine-mvp
+  path: plans/260409-1136-pos-medicine-mvp
+  state: validation
+  created_at: '2026-04-09T04:54:47+00:00'
+  updated_at: '2026-04-09T05:11:14+00:00'
+  project_type: maintenance
+  handoff_status: ready_for_plan
+- id: 260409-web-migration
+  path: plans/260409-web-migration
+  state: discovery
+  created_at: '2026-04-09T10:06:47+00:00'
+  updated_at: '2026-04-09T10:22:37+00:00'
+  project_type: new-project
+  handoff_status: draft
+updated_at: '2026-04-09T10:22:37+00:00'
+created_at: '2026-04-09T04:29:19+00:00'

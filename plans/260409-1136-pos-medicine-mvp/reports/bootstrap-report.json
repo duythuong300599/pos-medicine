@@ -1,0 +1,115 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-09T10:06:47+00:00",
+  "trigger": "session-start",
+  "session_id": "0015e81c-1a5e-47db-887d-eecf3e8ae97c",
+  "command": "",
+  "gate_policy": "guided",
+  "bootstrap_status": "completed",
+  "active_work_item_id": "260409-1136-pos-medicine-mvp",
+  "actions_run": [
+    "workflow-status-sync"
+  ],
+  "issues": [],
+  "results": {
+    "workflow_status_sync": {
+      "ok": true,
+      "exit_code": 0,
+      "script": "/Users/duythuong/.claude/scripts/workflow_status.py",
+      "stdout_tail": "  \"updated_at\": \"2026-04-09T10:06:47+00:00\",\n  \"workflow_status_path\": \"plans/workflow-status.yaml\",\n  \"work_items_registry\": \"plans/work-items.yaml\",\n  \"active_work_item_id\": \"260409-1136-pos-medicine-mvp\",\n  \"active_work_item_path\": \"plans/260409-1136-pos-medicine-mvp\",\n  \"work_item_state\": \"validation\",\n  \"handoff_status\": \"ready_for_plan\",\n  \"lifecycle_status\": \"ready_for_review\",\n  \"lifecycle_active_command\": \"\",\n  \"lifecycle_last_heartbeat_at\": \"2026-04-09T05:01:59+00:00\",\n  \"lifecycle_stale\": false,\n  \"auto_quality_status\": \"passed\",\n  \"gate_code_review_allowed\": true,\n  \"gate_git_allowed\": false,\n  \"gate_reason\": \"code review has not completed\",\n  \"recovery_command\": \"/code-review\",\n  \"gate_policy\": \"guided\",\n  \"bootstrap_status\": \"\",\n  \"bootstrap_actions_run\": [],\n  \"runtime_sync_phase\": \"manual\",\n  \"runtime_status_json_path\": \"\",\n  \"runtime_status_markdown_path\": \"\",\n  \"routing_enforced\": true,\n  \"work_item_resolution_reason\": \"\",\n  \"legacy_migration\": {\n    \"migrated\": 1,\n    \"active_item_id\": \"260409-1136-pos-medicine-mvp\",\n    \"items\": 3\n  }\n}",
+      "stderr_tail": "",
+      "payload": {
+        "project_type": "new-project",
+        "track": "default",
+        "phase": "implementation",
+        "status": "active",
+        "owner": "duythuong",
+        "current_step": "cooking",
+        "next_action": "Run /cook in a fresh session.",
+        "next_action_struct": {
+          "command": "/cook",
+          "reason": "Execute approved implementation plan.",
+          "requires_new_session": true,
+          "session_guidance": "Run this step in a fresh session for cleaner context. Use /clear or open a new terminal and run claude --resume."
+        },
+        "derived_evidence": [
+          "current_step=cooking -> phase=implementation (lifecycle-managed)"
+        ],
+        "plan_status_path": "plans/260409-1136-pos-medicine-mvp/plan-status.yaml",
+        "context_snapshot_path": "plans/260409-1136-pos-medicine-mvp/context/project-context-snapshot.md",
+        "team_phase_state": {
+          "ready": [
+            "phase-1-project-setup",
+            "phase-2-product-catalog",
+            "phase-3-cart-checkout",
+            "phase-4-transaction-history",
+            "phase-5-inventory",
+            "phase-6-polish-qa"
+          ],
+          "in_progress": [],
+          "blocked": [],
+          "completed": [],
+          "total_phases": 6
+        },
+        "plan_status": {
+          "status": "not-started",
+          "progress_pct": 0.0,
+          "phase_count": 6,
+          "next_phase": {
+            "phase_id": "1",
+            "phase_label": "Project Setup",
+            "file": "plans/260409-1136-pos-medicine-mvp/phase-1-project-setup.md",
+            "status": "not-started",
+            "checklist_open": 7
+          }
+        },
+        "plan_progress_pct": 0.0,
+        "plan_phase_count": 6,
+        "quality": {
+          "quality_gate_passed": true,
+          "quality_gate_report": "plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.json",
+          "lint_passed": true,
+          "typecheck_passed": true,
+          "build_passed": true,
+          "tests_passed": true,
+          "ui_smoke_passed": true,
+          "security_passed": true
+        },
+        "commit_report_path": "",
+        "last_reported_commit": "",
+        "last_reported_branch": "",
+        "last_reported_commit_at": "",
+        "commit_report_source": "",
+        "updated_at": "2026-04-09T10:06:47+00:00",
+        "workflow_status_path": "plans/workflow-status.yaml",
+        "work_items_registry": "plans/work-items.yaml",
+        "active_work_item_id": "260409-1136-pos-medicine-mvp",
+        "active_work_item_path": "plans/260409-1136-pos-medicine-mvp",
+        "work_item_state": "validation",
+        "handoff_status": "ready_for_plan",
+        "lifecycle_status": "ready_for_review",
+        "lifecycle_active_command": "",
+        "lifecycle_last_heartbeat_at": "2026-04-09T05:01:59+00:00",
+        "lifecycle_stale": false,
+        "auto_quality_status": "passed",
+        "gate_code_review_allowed": true,
+        "gate_git_allowed": false,
+        "gate_reason": "code review has not completed",
+        "recovery_command": "/code-review",
+        "gate_policy": "guided",
+        "bootstrap_status": "",
+        "bootstrap_actions_run": [],
+        "runtime_sync_phase": "manual",
+        "runtime_status_json_path": "",
+        "runtime_status_markdown_path": "",
+        "routing_enforced": true,
+        "work_item_resolution_reason": "",
+        "legacy_migration": {
+          "migrated": 1,
+          "active_item_id": "260409-1136-pos-medicine-mvp",
+          "items": 3
+        }
+      }
+    }
+  }
+}
