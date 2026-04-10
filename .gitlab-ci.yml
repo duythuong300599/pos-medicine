@@ -1,18 +1,10 @@
 stages:
   - deploy
 
-variables:
-  GIT_CLONE_PATH: /home/thuongtd/pos-medicine
-
-# Build & deploy tren VPS qua GitLab Runner (shell executor)
-# CI Variables can dat trong GitLab: VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
-
 deploy:
   stage: deploy
   tags:
     - postag
-  before_script:
-    - mkdir -p /home/thuongtd/pos-medicine
   script:
     - chmod +x deploy.sh
     - ./deploy.sh
