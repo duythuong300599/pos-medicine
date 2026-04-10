@@ -1,7 +1,7 @@
 # Project Context Snapshot
 
-- Generated: `2026-04-10T04:33:41+00:00`
-- Source: `workflow-status-sync`
+- Generated: `2026-04-10T05:47:48+00:00`
+- Source: `session-init`
 - Work item: `260409-web-migration`
 
 # Project Context
