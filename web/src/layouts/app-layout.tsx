@@ -4,8 +4,10 @@ import { AppSidebar } from '@/components/app-sidebar'
 import { BottomNav } from '@/components/bottom-nav'
 import { Separator } from '@/components/ui/separator'
 import { Toaster } from '@/components/ui/sonner'
+import { useKeyboardScroll } from '@/hooks/use-keyboard-scroll'
 
 export function AppLayout() {
+  useKeyboardScroll()
   return (
     <SidebarProvider>
       {/* Sidebar chỉ hiện trên desktop (lg+) */}
