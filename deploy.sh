@@ -8,7 +8,16 @@ set -euo pipefail
 CONTAINER_NAME="pos-medicine-web-container"
 IMAGE_NAME="pos-medicine-web-image"
 ENV_FILE="web/.env"
-PORT="${PORT:-80}"
+PORT="${PORT:-3001}"
+
+CREDENTIALS_ENV="/home/thuongtd/credentials/.env.pos-medicine"
+
+# ─── Copy .env từ credentials ─────────────────────────────────────────────────
+if [[ ! -f "$CREDENTIALS_ENV" ]]; then
+  echo "Lỗi: Không tìm thấy $CREDENTIALS_ENV"
+  exit 1
+fi
+cp "$CREDENTIALS_ENV" "$ENV_FILE"
 
 # ─── Kiểm tra file .env ───────────────────────────────────────────────────────
 if [[ ! -f "$ENV_FILE" ]]; then
