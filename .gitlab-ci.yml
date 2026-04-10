@@ -6,6 +6,7 @@ deploy:
   tags:
     - postag
   script:
+    - echo "Deploying..."
     - chmod +x deploy.sh
     - ./deploy.sh
   only:
