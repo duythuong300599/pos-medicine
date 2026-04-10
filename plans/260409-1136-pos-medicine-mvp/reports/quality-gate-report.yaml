@@ -1,0 +1,123 @@
+version: '1.0'
+generated_at: '2026-04-09T05:01:59+00:00'
+project_root: /Users/duythuong/Documents/DuyTCode/pos-medicine
+requested_project_root: /Users/duythuong/Documents/DuyTCode/pos-medicine
+mode: changed
+scope: auto
+strict: false
+lifecycle_origin: manual
+lifecycle_command: /quality
+ui_engine: auto
+ui_coverage: impacted
+changed_files_count: 0
+changed_files: []
+checks:
+  hardcoded:
+    name: hardcoded
+    applicable: false
+    passed: true
+    detail: No hard-coded secret/config findings
+    command: ''
+    execution: {}
+  skill_markdown_links:
+    name: skill_markdown_links
+    applicable: false
+    passed: true
+    detail: No broken local links in SKILL.md files
+    command: ''
+    execution: {}
+  skill_artifacts:
+    name: skill_artifacts
+    applicable: false
+    passed: true
+    detail: No tracked skill artifacts detected
+    command: ''
+    execution: {}
+  skill_script_smoke:
+    name: skill_script_smoke
+    applicable: false
+    passed: true
+    detail: Smoke script not configured
+    command: ''
+    execution: {}
+  lint:
+    name: lint
+    applicable: false
+    passed: true
+    detail: No lint script detected in package.json
+    command: ''
+    execution: {}
+  typecheck:
+    name: typecheck
+    applicable: false
+    passed: true
+    detail: No typecheck script detected in package.json
+    command: ''
+    execution: {}
+  build:
+    name: build
+    applicable: false
+    passed: true
+    detail: No build script detected in package.json
+    command: ''
+    execution: {}
+  tests:
+    name: tests
+    applicable: false
+    passed: true
+    detail: No test script detected in package.json
+    command: ''
+    execution: {}
+  ui_smoke:
+    name: ui_smoke
+    applicable: false
+    passed: true
+    detail: Backend-only project — E2E not applicable
+    command: ''
+    execution: {}
+  dependency_audit:
+    name: dependency_audit
+    applicable: false
+    passed: true
+    detail: Dependency audit not applicable
+    command: ''
+    execution: {}
+hardcoded_findings: []
+skill_markdown_issues: []
+skill_artifact_matches: []
+warnings: []
+recommended_actions: []
+summary:
+  quality_gate_passed: true
+  security_passed: true
+  failing_checks: []
+  soft_failed_checks: []
+  frontend_impacted: false
+required_runtime_steps:
+  ui_validation:
+    required: false
+    tool: none
+    status: not_required
+    blocking: false
+    reason: No UI/app scope detected.
+    recommended_command: ''
+    check_name: ui_smoke
+    check_detail: Backend-only project — E2E not applicable
+e2e_tool_detected: none
+project_type:
+  web: false
+  react_native: false
+  flutter: false
+  ios_native: false
+  android_native: false
+  backend_only: true
+spec_coverage:
+  available: false
+  reason: no_frontmatter
+routing_enforced: true
+active_work_item_id: 260409-1136-pos-medicine-mvp
+active_work_item_path: plans/260409-1136-pos-medicine-mvp
+artifacts:
+  json: plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.json
+  yaml: plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.yaml
+  markdown: null

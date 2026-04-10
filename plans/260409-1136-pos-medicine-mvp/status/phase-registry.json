@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "phases": {
+    "phase-1-project-setup": {
+      "spec_id": "phase-1-project-setup",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-1-project-setup.md"
+    },
+    "phase-2-product-catalog": {
+      "spec_id": "phase-2-product-catalog",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-2-product-catalog.md"
+    },
+    "phase-3-cart-checkout": {
+      "spec_id": "phase-3-cart-checkout",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-3-cart-checkout.md"
+    },
+    "phase-4-transaction-history": {
+      "spec_id": "phase-4-transaction-history",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-4-transaction-history.md"
+    },
+    "phase-5-inventory": {
+      "spec_id": "phase-5-inventory",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-5-inventory.md"
+    },
+    "phase-6-polish-qa": {
+      "spec_id": "phase-6-polish-qa",
+      "status": "pending",
+      "blockedBy": [],
+      "assignee": "",
+      "claimed_at": "",
+      "file": "plans/260409-1136-pos-medicine-mvp/phase-6-polish-qa.md"
+    }
+  },
+  "ready": [
+    "phase-1-project-setup",
+    "phase-2-product-catalog",
+    "phase-3-cart-checkout",
+    "phase-4-transaction-history",
+    "phase-5-inventory",
+    "phase-6-polish-qa"
+  ],
+  "in_progress": [],
+  "blocked": [],
+  "completed": [],
+  "generated_at": "2026-04-09T10:06:47+00:00"
+}

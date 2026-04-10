@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-09T04:36:32+00:00",
+  "status": "PASSED",
+  "passed": true,
+  "scope_requested": "planning",
+  "scope_effective": "planning",
+  "owner": "duythuong",
+  "report": "plans/260409-1126-workflow-init/reports/readiness-report.json",
+  "report_markdown": "plans/260409-1126-workflow-init/reports/readiness-report.md",
+  "issues": [],
+  "warnings": [],
+  "checks": [
+    "workflow-status present",
+    "owner set (duythuong)",
+    "active work item resolved (260409-1126-workflow-init)",
+    "decision-handoff status ready_for_plan",
+    "decision-handoff field ready: problem_statement",
+    "decision-handoff field ready: chosen_direction",
+    "decision-handoff acceptance_criteria present",
+    "UI readiness assessed (strong, warning-only enforcement)",
+    "UI handoff artifacts present",
+    "context file found (plans/260409-1126-workflow-init/context/project-context-snapshot.md)",
+    "context field ready: Problem statement",
+    "context field ready: Success metrics",
+    "context field ready: Chosen direction",
+    "context field ready: Trade-offs accepted",
+    "context field ready: In scope this sprint",
+    "context field ready: Test strategy",
+    "brainstorm confirmation present",
+    "auto brainstorm block detected"
+  ],
+  "active_work_item_id": "260409-1126-workflow-init",
+  "active_work_item_path": "plans/260409-1126-workflow-init",
+  "work_item_resolution_reason": "",
+  "legacy_migration": {
+    "migrated": 0,
+    "active_item_id": "260409-1126-workflow-init",
+    "items": 1
+  },
+  "spec_lint": {
+    "warnings": [],
+    "warning_count": 0
+  },
+  "ui_readiness": {
+    "scope_detected": true,
+    "level": "strong",
+    "enforcement_mode": "warning-only",
+    "required_fields": [
+      "information_architecture",
+      "sitemap",
+      "screen_inventory",
+      "primary_user_flows",
+      "interaction_contract",
+      "concept_options"
+    ],
+    "ready_fields": [
+      "information_architecture",
+      "sitemap",
+      "screen_inventory",
+      "primary_user_flows",
+      "interaction_contract",
+      "concept_options"
+    ],
+    "missing_fields": [],
+    "warnings": [],
+    "warning_count": 0
+  },
+  "plan_ui_backfill": {}
+}

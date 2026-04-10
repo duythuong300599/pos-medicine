@@ -1,0 +1,280 @@
+generated_at: '2026-04-09T04:29:19+00:00'
+root_path: /Users/duythuong/Documents/DuyTCode/pos-medicine
+scan_mode: deep
+heuristic_summary:
+  project_purpose_guess: Purpose is unclear from static signals. Run deeper discovery
+    and inspect business modules.
+  purpose_confidence: 0.45
+  architecture_guess: Architecture appears mixed or monolithic; deeper scan may be
+    required for precise boundaries.
+  detected_stacks: []
+  dominant_languages: []
+  serious_findings:
+  - severity: high
+    message: Missing README. Onboarding and architecture comprehension will be slow.
+    path: null
+  - severity: medium
+    message: No obvious automated test footprint found.
+    path: null
+  - severity: low
+    message: No CI workflow directory detected (.github/workflows).
+    path: .github/workflows
+scan_stats:
+  files_scanned: 22
+  new_files_scanned: 12
+  directories_scanned: 8
+  top_level_dirs:
+  - docs
+  - plans
+repository_index:
+- path: plans/260409-1126-workflow-init
+  files: 10
+  example: plans/260409-1126-workflow-init/brainstorm/brainstorm-v01.md
+  role_guess: unknown
+  confidence: 0.55
+- path: AGENTS.md
+  files: 1
+  example: AGENTS.md
+  role_guess: unknown
+  confidence: 0.55
+- path: CLAUDE.md
+  files: 1
+  example: CLAUDE.md
+  role_guess: unknown
+  confidence: 0.55
+- path: docs/project-context.md
+  files: 1
+  example: docs/project-context.md
+  role_guess: unknown
+  confidence: 0.55
+- path: docs/sharded
+  files: 1
+  example: docs/sharded/index.md
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/project-scan-report.json
+  files: 1
+  example: plans/project-scan-report.json
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/project-scan-report.yaml
+  files: 1
+  example: plans/project-scan-report.yaml
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/work-items.yaml
+  files: 1
+  example: plans/work-items.yaml
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/workflow-init-report.json
+  files: 1
+  example: plans/workflow-init-report.json
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/workflow-init-report.yaml
+  files: 1
+  example: plans/workflow-init-report.yaml
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/workflow-status.yaml
+  files: 1
+  example: plans/workflow-status.yaml
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/project-analysis-input.json
+  files: 1
+  example: plans/project-analysis-input.json
+  role_guess: unknown
+  confidence: 0.55
+- path: plans/project-analysis-input.yaml
+  files: 1
+  example: plans/project-analysis-input.yaml
+  role_guess: unknown
+  confidence: 0.55
+startup_hints: []
+key_file_snippets:
+- path: CLAUDE.md
+  snippet: '# CLAUDE.md
+
+
+    ## Project Workflow Context
+
+
+    - Generated at: `2026-04-09T04:29:19+00:00`
+
+    - Workflow project type: `new-project`
+
+    - Workflow track: `default`
+
+
+    ## Project Context
+
+
+    - Full context: `docs/project-context.md`
+
+    - Architecture: `docs/project-architecture.md`
+
+    - Spec & acceptance criteria: `docs/project-spec.md`
+
+
+    ## Working Agreements
+
+
+    1. Run `/workflow-status --sync` before major work.
+
+    2. Run major steps in fresh sessions: `/plan`, `/cook`, `/fix`, `/debug`, `/test`,
+    `/code-review`, `/git`.
+
+    3. For brownfield discovery, run `/document-project` before planning.
+
+    4. For medium/large/hotfix work, run `/check-readiness` before `/cook`.
+
+
+    ## Non-Negotiable Engineering Guardrails
+
+
+    <!-- WORKFLOW-GUARDRAILS-START -->
+
+    1. No hard-coded secrets/config:
+
+    - Never hard-code API keys, tokens, passwords, DSN, or env-specific endpoints.
+
+    - Use environment variables or secure config providers.
+
+    2. Lint and conventions are mandatory:
+
+    - Do not mark work done unless lint/style/convention checks pass.
+
+    3. Typecheck and build are mandatory when applicable:
+
+    - Changes that affect typed/buildable code must pass typecheck and build.
+
+    4. Tests are mandatory when applicable:
+
+    - New code and changed behavior require passing tests for impacted scope.
+
+    5. Security baseline is mandatory:
+
+    - Run secret scan and dependency audit before release/review sign-off.
+
+    6. Evidence before completion claim:
+
+    - Never claim \"done\" without command outputs showing pass status.
+
+    <!-- WORKFLOW-GUARDRAILS-END -->
+
+
+    ## Notes
+
+
+    - Keep this file concise and project-specific.
+
+    - Add architecture and build/test conventions below this section.
+
+
+    <!-- WORKFLOW-INJECT-START -->
+
+    ## Workflow Inject (Auto)
+
+    - Updated at: `2026-04-09T04:29:19+00:00`
+
+    - Project type: `new-project`
+
+    - Track: `default`
+
+    - Session guidance: start a fresh session for major workflow steps.
+
+    <!-- WORKFLOW-INJECT-END -->'
+- path: AGENTS.md
+  snippet: '# AGENTS.md
+
+
+    ## Project Workflow Context
+
+
+    - Generated at: `2026-04-09T04:29:19+00:00`
+
+    - Workflow project type: `new-project`
+
+    - Workflow track: `default`
+
+
+    ## Project Context
+
+
+    - Full context: `docs/project-context.md`
+
+    - Architecture: `docs/project-architecture.md`
+
+    - Spec & acceptance criteria: `docs/project-spec.md`
+
+
+    ## Working Agreements
+
+
+    1. Run `/workflow-status --sync` before major work.
+
+    2. Run major steps in fresh sessions: `/plan`, `/cook`, `/fix`, `/debug`, `/test`,
+    `/code-review`, `/git`.
+
+    3. For brownfield discovery, run `/document-project` before planning.
+
+    4. For medium/large/hotfix work, run `/check-readiness` before `/cook`.
+
+
+    ## Non-Negotiable Engineering Guardrails
+
+
+    <!-- WORKFLOW-GUARDRAILS-START -->
+
+    1. No hard-coded secrets/config:
+
+    - Never hard-code API keys, tokens, passwords, DSN, or env-specific endpoints.
+
+    - Use environment variables or secure config providers.
+
+    2. Lint and conventions are mandatory:
+
+    - Do not mark work done unless lint/style/convention checks pass.
+
+    3. Typecheck and build are mandatory when applicable:
+
+    - Changes that affect typed/buildable code must pass typecheck and build.
+
+    4. Tests are mandatory when applicable:
+
+    - New code and changed behavior require passing tests for impacted scope.
+
+    5. Security baseline is mandatory:
+
+    - Run secret scan and dependency audit before release/review sign-off.
+
+    6. Evidence before completion claim:
+
+    - Never claim "done" without command outputs showing pass status.
+
+    <!-- WORKFLOW-GUARDRAILS-END -->
+
+
+    ## Notes
+
+
+    - Keep this file concise and project-specific.
+
+    - Add architecture and build/test conventions below this section.
+
+
+    <!-- WORKFLOW-INJECT-START -->
+
+    ## Workflow Inject (Auto)
+
+    - Updated at: `2026-04-09T04:29:19+00:00`
+
+    - Project type: `new-project`
+
+    - Track: `default`
+
+    - Session guidance: start a fresh session for major workflow steps.
+
+    <!-- WORKFLOW-INJECT-END -->'

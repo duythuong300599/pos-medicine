@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "work_item_id": "260409-1136-pos-medicine-mvp",
+  "state": "validation",
+  "handoff_status": "ready_for_plan",
+  "last_command": "/workflow-status",
+  "last_event_at": "2026-04-09T10:06:48+00:00",
+  "events_count": 36,
+  "lifecycle": {
+    "stage": "validation",
+    "status": "ready_for_review",
+    "active_command": "",
+    "active_session_id": "",
+    "started_at": "2026-04-09T05:01:59+00:00",
+    "last_heartbeat_at": "2026-04-09T05:01:59+00:00",
+    "completed_at": "2026-04-09T05:01:59+00:00",
+    "ttl_sec": 1800,
+    "stale": false,
+    "recovery_command": "/code-review"
+  },
+  "verification": {
+    "auto_quality_status": "passed",
+    "report_json": "plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.json",
+    "report_yaml": "plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.yaml",
+    "exit_code": 0,
+    "review_status": "pending",
+    "review_completed_at": "",
+    "git_status": "pending",
+    "git_completed_at": ""
+  },
+  "gates": {
+    "code_review_allowed": true,
+    "git_allowed": false,
+    "reason": "code review has not completed"
+  },
+  "updated_at": "2026-04-09T10:06:48+00:00",
+  "created_at": "2026-04-09T04:54:47+00:00"
+}

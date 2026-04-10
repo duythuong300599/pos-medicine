@@ -1,0 +1,233 @@
+{
+  "version": "1.0",
+  "work_item_id": "260409-1126-workflow-init",
+  "status": "ready_for_plan",
+  "handoff_status": "ready_for_plan",
+  "problem_statement": "auto-bootstrap-plan",
+  "goals": [],
+  "scope_in": [],
+  "scope_out": [],
+  "constraints": [],
+  "chosen_direction": "Auto bootstrap prepared decision handoff before /plan.",
+  "architecture_decisions": [
+    "Favor additive changes and reuse existing workflow artifacts.",
+    "Keep plan-status as the only progress source of truth.",
+    "Lock design direction before planning implementation details.",
+    "Favor additive changes and reuse existing workflow artifacts.",
+    "Keep plan-status as the only progress source of truth.",
+    "Lock design direction before planning implementation details."
+  ],
+  "ui_decisions": [
+    "Run ui-ux-pro-max before frontend-design during brainstorm/planning.",
+    "Lock sitemap, screen inventory, and interaction contract before detailed visual styling.",
+    "Capture empty/loading/error/success/disabled states in the plan.",
+    "Run ui-ux-pro-max before frontend-design during brainstorm/planning.",
+    "Lock sitemap, screen inventory, and interaction contract before detailed visual styling.",
+    "Capture empty/loading/error/success/disabled states in the plan."
+  ],
+  "information_architecture": [
+    "Identify the dominant navigation model before visual exploration.",
+    "Group functionality by user goals, not by implementation layers.",
+    "Identify the dominant navigation model before visual exploration.",
+    "Group functionality by user goals, not by implementation layers."
+  ],
+  "sitemap": [
+    "List core routes, nested views, and cross-screen entry points.",
+    "Include overlays as first-class surfaces when they carry meaningful tasks.",
+    "List core routes, nested views, and cross-screen entry points.",
+    "Include overlays as first-class surfaces when they carry meaningful tasks."
+  ],
+  "screen_inventory": [
+    "Inventory pages, tabs, panes, modals, drawers, sheets, and notification surfaces.",
+    "Mark which surfaces are persistent, contextual, or transient.",
+    "Inventory pages, tabs, panes, modals, drawers, sheets, and notification surfaces.",
+    "Mark which surfaces are persistent, contextual, or transient."
+  ],
+  "primary_user_flows": [
+    "Map the happy path, empty-start path, and recovery path for each critical task.",
+    "Call out state transitions that move users between screens or overlays.",
+    "Map the happy path, empty-start path, and recovery path for each critical task.",
+    "Call out state transitions that move users between screens or overlays."
+  ],
+  "interaction_contract": [
+    "Define how buttons, forms, tables, filters, modals, drawers, toasts, banners, and notifications behave.",
+    "Make ownership between blocks explicit: which surface triggers, updates, confirms, or dismisses another.",
+    "Define how buttons, forms, tables, filters, modals, drawers, toasts, banners, and notifications behave.",
+    "Make ownership between blocks explicit: which surface triggers, updates, confirms, or dismisses another."
+  ],
+  "concept_options": [
+    "Prepare 2-3 viable design directions with trade-offs before finalizing a single aesthetic.",
+    "Ask for user sign-off when direction materially changes hierarchy, density, or brand tone.",
+    "Prepare 2-3 viable design directions with trade-offs before finalizing a single aesthetic.",
+    "Ask for user sign-off when direction materially changes hierarchy, density, or brand tone."
+  ],
+  "decision_checkpoints": [
+    "Sitemap approved or assumptions explicitly recorded.",
+    "Primary flows and interaction contract documented before final visual system.",
+    "Chosen design direction approved or marked as a blocking decision gate.",
+    "Sitemap approved or assumptions explicitly recorded.",
+    "Primary flows and interaction contract documented before final visual system.",
+    "Chosen design direction approved or marked as a blocking decision gate."
+  ],
+  "design_system": "Document palette, typography, spacing, and motion only after IA, flows, and block interactions are clear.",
+  "responsive_strategy": "Desktop/tablet/mobile breakpoints must be explicit before /plan finishes. Define what collapses, stacks, drawers, or becomes full-screen on smaller viewports.",
+  "accessibility_constraints": [
+    "Contrast, focus visibility, keyboard support, and touch targets must be explicit.",
+    "Error messaging, announcements, and destructive actions must remain perceivable and recoverable.",
+    "Contrast, focus visibility, keyboard support, and touch targets must be explicit.",
+    "Error messaging, announcements, and destructive actions must remain perceivable and recoverable."
+  ],
+  "state_matrix": [
+    "empty",
+    "loading",
+    "error",
+    "success",
+    "disabled"
+  ],
+  "product_domain": "general",
+  "primary_user_archetypes": [],
+  "primary_jobs": [],
+  "information_architecture_details": {
+    "navigation_model": "",
+    "entry_points": [],
+    "primary_zones": [],
+    "notes": [
+      "Identify the dominant navigation model before visual exploration.",
+      "Group functionality by user goals, not by implementation layers."
+    ]
+  },
+  "interaction_contract_details": {
+    "buttons": [],
+    "modals": [],
+    "notifications": [],
+    "state_model": [
+      "empty",
+      "loading",
+      "error",
+      "success",
+      "disabled"
+    ],
+    "contract_notes": [
+      "Define how buttons, forms, tables, filters, modals, drawers, toasts, banners, and notifications behave.",
+      "Make ownership between blocks explicit: which surface triggers, updates, confirms, or dismisses another."
+    ]
+  },
+  "selected_concept": {
+    "name": "Auto bootstrap prepared decision handoff before /plan.",
+    "description": "",
+    "rationale": ""
+  },
+  "rejected_concepts": [],
+  "concept_rationale": "",
+  "ui_readiness": {
+    "scope_detected": true,
+    "level": "strong",
+    "enforcement_mode": "warning-only",
+    "required_fields": [
+      "information_architecture",
+      "sitemap",
+      "screen_inventory",
+      "primary_user_flows",
+      "interaction_contract",
+      "concept_options"
+    ],
+    "ready_fields": [
+      "information_architecture",
+      "sitemap",
+      "screen_inventory",
+      "primary_user_flows",
+      "interaction_contract",
+      "concept_options"
+    ],
+    "missing_fields": [],
+    "warnings": [],
+    "warning_count": 0
+  },
+  "ui_readiness_warnings": [],
+  "dependencies": [
+    "Decision handoff must be current before /plan.",
+    "Readiness must pass before /cook.",
+    "Decision handoff must be current before /plan.",
+    "Readiness must pass before /cook."
+  ],
+  "test_strategy": "Document unit/integration/regression coverage and any UI validation before implementation.",
+  "tradeoffs": [
+    "Prefer refreshed handoff data over stale brainstorming artifacts.",
+    "Prefer refreshed handoff data over stale brainstorming artifacts."
+  ],
+  "acceptance_criteria": [
+    "Implementation plan covers scope_in and constraints",
+    "UI plans define sitemap, screen inventory, primary flows, and interaction contract before styling",
+    "Tests and quality gates are defined before /cook",
+    "Plan includes Dependencies and Test Strategy sections"
+  ],
+  "risks": [],
+  "open_questions": [
+    "Confirm explicit problem statement and expected business outcome.",
+    "Confirm in-scope vs out-of-scope boundaries for first delivery.",
+    "Confirm constraints: timeline, compliance, risk tolerance, and budget.",
+    "Confirm one explicit problem statement and target business outcome.",
+    "Validate mitigation owner and rollback path for the top risk.",
+    "Confirm module boundaries and ownership map for the first delivery slice.",
+    "Confirm canonical local startup command with prerequisites.",
+    "Clarify unknown: Problem statement c\u1ee5 th\u1ec3: 'pos-medicine' gi\u1ea3i quy\u1ebft v\u1ea5n \u0111\u1ec1 g\u00ec ch\u00ednh x\u00e1c (nh\u00e0 thu\u1ed1c nh\u1ecf l\u1ebb? chu\u1ed7i? b\u1ec7nh vi\u1ec7n?)",
+    "Clarify unknown: Primary user persona: d\u01b0\u1ee3c s\u0129 b\u00e1n h\u00e0ng, qu\u1ea3n l\u00fd nh\u00e0 thu\u1ed1c, hay kh\u00e1ch h\u00e0ng?",
+    "Clarify unknown: Tech stack quy\u1ebft \u0111\u1ecbnh: frontend framework, backend language, database, deployment target"
+  ],
+  "sources": [
+    "docs/project-context.md",
+    "plans/260409-1126-workflow-init/brainstorm/brainstorm-v01.md",
+    "plans/260409-1126-workflow-init/brainstorm/brainstorm-v02.md",
+    "plans/260409-1126-workflow-init/brainstorm/brainstorm-v03.md",
+    "plans/project-scan-report.json"
+  ],
+  "approved_by": "",
+  "approved_at": "",
+  "updated_at": "2026-04-09T04:36:32+00:00",
+  "created_at": "2026-04-09T04:29:19+00:00",
+  "brainstorm_recommendation": {
+    "recommended_depth": "deep",
+    "recommended_session_pattern": "multi-loop (>=3 options + tradeoffs + risk convergence)",
+    "score": 8,
+    "confidence": 0.9,
+    "factors": [
+      "[+3] purpose_confidence=0.45 (low)",
+      "[+1] one high/critical finding detected",
+      "[+2] missing_information=9",
+      "[+1] repository_index_entries=13",
+      "[+1] architecture boundaries are still mixed/uncertain"
+    ],
+    "required_clarifications": [
+      "Confirm one explicit problem statement and target business outcome.",
+      "Validate mitigation owner and rollback path for the top risk.",
+      "Clarify unknown: Problem statement c\u1ee5 th\u1ec3: 'pos-medicine' gi\u1ea3i quy\u1ebft v\u1ea5n \u0111\u1ec1 g\u00ec ch\u00ednh x\u00e1c (nh\u00e0 thu\u1ed1c nh\u1ecf l\u1ebb? chu\u1ed7i? b\u1ec7nh vi\u1ec7n?)",
+      "Clarify unknown: Primary user persona: d\u01b0\u1ee3c s\u0129 b\u00e1n h\u00e0ng, qu\u1ea3n l\u00fd nh\u00e0 thu\u1ed1c, hay kh\u00e1ch h\u00e0ng?",
+      "Clarify unknown: Tech stack quy\u1ebft \u0111\u1ecbnh: frontend framework, backend language, database, deployment target",
+      "Confirm module boundaries and ownership map for the first delivery slice.",
+      "Confirm canonical local startup command with prerequisites."
+    ],
+    "requires_user_confirmation": true,
+    "decision_status": "pending_user_confirmation",
+    "policy": "advisory-only",
+    "generated_at": "2026-04-09T04:30:51+00:00"
+  },
+  "requirement_confirmation_required": true,
+  "requirement_confirmation_status": "pending",
+  "inference_policy": "advisory-only",
+  "inferred_problem_statement": "Purpose is unclear from static signals. Run deeper discovery and inspect business modules.",
+  "inferred_chosen_direction": "Architecture appears mixed or monolithic; deeper scan may be required for precise boundaries.",
+  "ba_extracted": false,
+  "user_stories": [],
+  "stakeholders": [],
+  "target_platforms": [],
+  "assumptions": [],
+  "conflicts": [],
+  "ba_readiness": {
+    "extracted": false,
+    "stories_count": 0,
+    "criteria_count": 4,
+    "platforms_detected": [],
+    "open_conflicts": 0,
+    "unconfirmed_assumptions": 0
+  }
+}

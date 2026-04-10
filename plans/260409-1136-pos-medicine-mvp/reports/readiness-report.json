@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-09T05:01:59+00:00",
+  "status": "PASSED",
+  "passed": true,
+  "scope_requested": "medium",
+  "scope_effective": "medium",
+  "owner": "duythuong",
+  "report": "plans/260409-1136-pos-medicine-mvp/reports/readiness-report.json",
+  "report_markdown": "plans/260409-1136-pos-medicine-mvp/reports/readiness-report.md",
+  "issues": [],
+  "warnings": [
+    "phase UI contract skipped because the plan-ready UI payload was missing",
+    "Phase file missing sections (phase-6-polish-qa.md): Overview, Risk Assessment"
+  ],
+  "checks": [
+    "workflow-status present",
+    "owner set (duythuong)",
+    "active work item resolved (260409-1136-pos-medicine-mvp)",
+    "plan file found (plans/260409-1136-pos-medicine-mvp/plan.md)",
+    "plan-status synced (plans/260409-1136-pos-medicine-mvp/plan-status.yaml)",
+    "plan-status phases tracked (6)",
+    "plan-status checklist tracked (52 items)",
+    "plan.md has mandatory sections",
+    "phase files found (6)",
+    "test strategy evidence present"
+  ],
+  "active_work_item_id": "260409-1136-pos-medicine-mvp",
+  "active_work_item_path": "plans/260409-1136-pos-medicine-mvp",
+  "work_item_resolution_reason": "",
+  "legacy_migration": {
+    "migrated": 0,
+    "active_item_id": "260409-1136-pos-medicine-mvp",
+    "items": 2
+  },
+  "spec_lint": {
+    "warnings": [],
+    "warning_count": 0
+  },
+  "ui_readiness": {},
+  "plan_ui_backfill": {
+    "status": "skipped",
+    "action": "skipped",
+    "changed": false,
+    "item_id": "260409-1136-pos-medicine-mvp",
+    "plan_path": "/Users/duythuong/Documents/DuyTCode/pos-medicine/plans/260409-1136-pos-medicine-mvp/plan.md",
+    "ui_readiness": {
+      "scope_detected": false,
+      "level": "not_applicable",
+      "enforcement_mode": "warning-only",
+      "required_fields": [
+        "information_architecture",
+        "sitemap",
+        "screen_inventory",
+        "primary_user_flows",
+        "interaction_contract",
+        "concept_options"
+      ],
+      "ready_fields": [],
+      "missing_fields": [],
+      "warnings": [],
+      "warning_count": 0
+    },
+    "ui_summary": {
+      "domain_pack": "",
+      "domain_label": "",
+      "selected_concept": "",
+      "concept_rationale": "",
+      "rejected_concepts": [],
+      "trust_signals": [],
+      "decision_checkpoints": [],
+      "phase_hydration_hints": {}
+    },
+    "plan_ready_artifact": {},
+    "phase_ui_sync": {
+      "status": "skipped",
+      "reason": "design-system-payload-missing",
+      "phase_paths": []
+    }
+  }
+}

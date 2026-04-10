@@ -1,0 +1,108 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-04-10T04:33:41+00:00",
+  "trigger": "session-start",
+  "session_id": "0015e81c-1a5e-47db-887d-eecf3e8ae97c",
+  "command": "",
+  "gate_policy": "guided",
+  "bootstrap_status": "completed",
+  "active_work_item_id": "260409-web-migration",
+  "actions_run": [
+    "workflow-status-sync"
+  ],
+  "issues": [],
+  "results": {
+    "workflow_status_sync": {
+      "ok": true,
+      "exit_code": 0,
+      "script": "/Users/duythuong/.claude/scripts/workflow_status.py",
+      "stdout_tail": "  \"updated_at\": \"2026-04-10T04:33:41+00:00\",\n  \"workflow_status_path\": \"plans/workflow-status.yaml\",\n  \"work_items_registry\": \"plans/work-items.yaml\",\n  \"active_work_item_id\": \"260409-web-migration\",\n  \"active_work_item_path\": \"plans/260409-web-migration\",\n  \"work_item_state\": \"discovery\",\n  \"handoff_status\": \"draft\",\n  \"lifecycle_status\": \"idle\",\n  \"lifecycle_active_command\": \"\",\n  \"lifecycle_last_heartbeat_at\": \"\",\n  \"lifecycle_stale\": false,\n  \"auto_quality_status\": \"skipped\",\n  \"gate_code_review_allowed\": true,\n  \"gate_git_allowed\": false,\n  \"gate_reason\": \"quality verification not started yet\",\n  \"recovery_command\": \"\",\n  \"gate_policy\": \"guided\",\n  \"bootstrap_status\": \"\",\n  \"bootstrap_actions_run\": [],\n  \"runtime_sync_phase\": \"manual\",\n  \"runtime_status_json_path\": \"\",\n  \"runtime_status_markdown_path\": \"\",\n  \"routing_enforced\": true,\n  \"work_item_resolution_reason\": \"\",\n  \"legacy_migration\": {\n    \"migrated\": 0,\n    \"active_item_id\": \"260409-web-migration\",\n    \"items\": 3\n  }\n}",
+      "stderr_tail": "",
+      "payload": {
+        "project_type": "new-project",
+        "track": "default",
+        "phase": "implementation",
+        "status": "active",
+        "owner": "duythuong",
+        "current_step": "cooking",
+        "next_action": "Run /cook in a fresh session.",
+        "next_action_struct": {
+          "command": "/cook",
+          "reason": "Execute approved implementation plan.",
+          "requires_new_session": true,
+          "session_guidance": "Run this step in a fresh session for cleaner context. Use /clear or open a new terminal and run claude --resume."
+        },
+        "derived_evidence": [
+          "current_step=cooking -> phase=implementation (lifecycle-managed)"
+        ],
+        "plan_status_path": "plans/260409-web-migration/plan-status.yaml",
+        "context_snapshot_path": "plans/260409-web-migration/context/project-context-snapshot.md",
+        "team_phase_state": {
+          "ready": [],
+          "in_progress": [],
+          "blocked": [],
+          "completed": [],
+          "total_phases": 0
+        },
+        "plan_status": {
+          "status": "not-started",
+          "progress_pct": 0.0,
+          "phase_count": 0,
+          "next_phase": {
+            "phase_id": "plan",
+            "phase_label": "Plan Checklist",
+            "file": "plans/260409-web-migration/plan.md",
+            "status": "not-started",
+            "checklist_open": 32
+          }
+        },
+        "plan_progress_pct": 0.0,
+        "plan_phase_count": 0,
+        "quality": {
+          "quality_gate_passed": true,
+          "quality_gate_report": "plans/260409-1136-pos-medicine-mvp/reports/quality-gate-report.json",
+          "lint_passed": true,
+          "typecheck_passed": true,
+          "build_passed": true,
+          "tests_passed": true,
+          "ui_smoke_passed": true,
+          "security_passed": true
+        },
+        "commit_report_path": "",
+        "last_reported_commit": "",
+        "last_reported_branch": "",
+        "last_reported_commit_at": "",
+        "commit_report_source": "",
+        "updated_at": "2026-04-10T04:33:41+00:00",
+        "workflow_status_path": "plans/workflow-status.yaml",
+        "work_items_registry": "plans/work-items.yaml",
+        "active_work_item_id": "260409-web-migration",
+        "active_work_item_path": "plans/260409-web-migration",
+        "work_item_state": "discovery",
+        "handoff_status": "draft",
+        "lifecycle_status": "idle",
+        "lifecycle_active_command": "",
+        "lifecycle_last_heartbeat_at": "",
+        "lifecycle_stale": false,
+        "auto_quality_status": "skipped",
+        "gate_code_review_allowed": true,
+        "gate_git_allowed": false,
+        "gate_reason": "quality verification not started yet",
+        "recovery_command": "",
+        "gate_policy": "guided",
+        "bootstrap_status": "",
+        "bootstrap_actions_run": [],
+        "runtime_sync_phase": "manual",
+        "runtime_status_json_path": "",
+        "runtime_status_markdown_path": "",
+        "routing_enforced": true,
+        "work_item_resolution_reason": "",
+        "legacy_migration": {
+          "migrated": 0,
+          "active_item_id": "260409-web-migration",
+          "items": 3
+        }
+      }
+    }
+  }
+}

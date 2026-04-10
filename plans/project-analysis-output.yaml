@@ -1,0 +1,152 @@
+provider: claude
+run_id: deb5da20-4a78-4ae5-875d-98d7d142faae
+purpose_summary: Dự án "pos-medicine" có khả năng cao là hệ thống Point of Sale (POS)
+  dành cho nhà thuốc / cửa hàng dược phẩm — giải quyết bài toán quản lý bán hàng,
+  tồn kho thuốc, và giao dịch tại quầy. Dự án đang ở giai đoạn khởi tạo (new-project
+  / discovery), chưa có source code, chỉ có scaffolding workflow từ ClaudeKit.
+purpose_confidence: 0.45
+architecture_overview: 'Chưa có kiến trúc thực sự nào được xác định. Repository hiện
+  tại chỉ gồm hai thư mục: `docs/` (tài liệu dự án) và `plans/` (workflow state của
+  ClaudeKit). Không có source code, không có dependency files (package.json, requirements.txt,
+  go.mod…), không có Dockerfile, không có CI/CD. Tên dự án "pos-medicine" gợi ý một
+  monolith hoặc fullstack web app cho quản lý nhà thuốc — nhưng stack chưa được chọn.
+  Kiến trúc runtime, ranh giới module, và tích hợp ngoài hoàn toàn chưa xác định.'
+repository_index:
+- path: CLAUDE.md
+  role: 'Cấu hình Claude Code cho dự án: guardrails, workflow agreements, inject context'
+  confidence: 0.95
+- path: AGENTS.md
+  role: Mirror của CLAUDE.md cho các AI agent khác (OpenAI Codex, Gemini), cùng nội
+    dung guardrails
+  confidence: 0.95
+- path: docs/project-context.md
+  role: 'Template context dự án chưa điền: problem statement, scope, architecture
+    snapshot, risks'
+  confidence: 0.9
+- path: docs/sharded/index.md
+  role: Index cho tài liệu sharded (hiện rỗng hoặc placeholder)
+  confidence: 0.6
+- path: plans/260409-1126-workflow-init/
+  role: 'Work item workflow-init: brainstorm, discovery state, handoff draft'
+  confidence: 0.9
+- path: plans/project-scan-report.json
+  role: Kết quả scan tự động của document-project (quick mode) — inputs cho planning
+  confidence: 0.9
+- path: plans/work-items.yaml
+  role: Registry work items của ClaudeKit workflow — tracking discovery state
+  confidence: 0.85
+- path: plans/workflow-status.yaml
+  role: 'Trạng thái workflow hiện tại: phase, handoff, next actions'
+  confidence: 0.85
+- path: plans/workflow-init-report.json
+  role: Report JSON của bước workflow-init (metadata, brainstorm questions)
+  confidence: 0.8
+- path: plans/project-analysis-input.json
+  role: Input JSON cho bước phân tích dự án trong pipeline ClaudeKit
+  confidence: 0.75
+key_modules:
+- name: Project Context Document
+  path: docs/project-context.md
+  responsibility: Single source of truth cho problem statement, scope, architecture
+    snapshot, và risks — phải điền đầy đủ trước khi /plan
+  confidence: 0.9
+- name: CLAUDE.md / AGENTS.md
+  path: CLAUDE.md
+  responsibility: 'Guardrails bắt buộc: no hardcoded secrets, lint/typecheck/test/security
+    phải pass, workflow agreements cho mọi session'
+  confidence: 0.95
+- name: Workflow Init Work Item
+  path: plans/260409-1126-workflow-init/
+  responsibility: Tracks brainstorm questions và discovery decisions cần được confirm
+    trước khi bước sang /plan
+  confidence: 0.85
+- name: Project Scan Report
+  path: plans/project-scan-report.json
+  responsibility: Output của document-project quick scan — baseline cho mọi planning
+    decision
+  confidence: 0.8
+startup_instructions:
+- scenario: Xem trạng thái workflow hiện tại
+  command: /workflow-status --sync
+  notes: 'Chạy trước mọi tác vụ lớn. Hiện tại: state=discovery, handoff=draft'
+  confidence: 0.9
+- scenario: Điền context và bắt đầu brainstorm
+  command: /brainstorm
+  notes: 'Trả lời 6 câu hỏi trong brainstorm-v01.md, đặc biệt: problem statement,
+    primary user, startup path'
+  confidence: 0.85
+- scenario: Tạo plan khi discovery hoàn tất
+  command: /plan
+  notes: Chỉ chạy sau khi docs/project-context.md đã được điền đầy đủ và brainstorm
+    confirmed=yes
+  confidence: 0.85
+- scenario: Implement sau khi có plan
+  command: /cook
+  notes: 'Chạy /check-readiness trước. Toàn bộ pipeline: research → plan → implement
+    → test → review'
+  confidence: 0.8
+- scenario: Chưa có startup command thực
+  command: N/A — chưa có source code
+  notes: Không có package.json, requirements.txt, Dockerfile, hay Makefile. Stack
+    chưa được chọn.
+  confidence: 1
+critical_risks:
+- severity: critical
+  issue: Repository hoàn toàn trống — không có source code
+  evidence: Chỉ có 22 files scanned, tất cả là markdown/yaml/json workflow files.
+    Không có extension .ts, .py, .go, .java, .dart được phát hiện.
+  recommendation: Xác nhận problem statement và tech stack TRƯỚC khi bất kỳ code nào
+    được viết. Điền docs/project-context.md đầy đủ.
+  confidence: 1
+- severity: high
+  issue: Thiếu README — onboarding bị tắc ngay từ đầu
+  evidence: Scan report ghi nhận [high] Missing README. Không file nào mô tả setup,
+    purpose, hay quick start.
+  recommendation: 'Tạo README.md tối thiểu với: mô tả dự án, tech stack dự kiến, prerequisites,
+    và setup steps sau khi stack được chọn.'
+  confidence: 0.95
+- severity: high
+  issue: Problem statement chưa được xác định
+  evidence: docs/project-context.md có các trường 'Problem statement:', 'Success metrics:',
+    'Primary users/personas:' tất cả đều rỗng. brainstorm_recommendation.decision_status
+    = 'pending_user_confirmation'.
+  recommendation: Trả lời 6 câu hỏi trong brainstorm-v01.md, ưu tiên câu 1 (business
+    outcome) và câu 2 (primary persona).
+  confidence: 0.95
+- severity: high
+  issue: Tech stack chưa được chọn
+  evidence: 'detected_stacks: [], dominant_languages: [] trong project-scan-report.json.
+    Không có package manager files.'
+  recommendation: 'Quyết định stack (ví dụ: Next.js + Supabase, hoặc Django + React)
+    dựa trên team skills và POS requirements trước khi /plan.'
+  confidence: 0.9
+- severity: medium
+  issue: Không có automated tests
+  evidence: Scan report ghi nhận [medium] No obvious automated test footprint found.
+  recommendation: Thiết lập test framework cùng lúc với tech stack. Đây là guardrail
+    bắt buộc trong CLAUDE.md.
+  confidence: 0.9
+- severity: low
+  issue: Không có CI/CD pipeline
+  evidence: Không có .github/workflows directory. Scan ghi nhận [low].
+  recommendation: Tạo GitHub Actions workflow cơ bản (lint → test → build) khi có
+    source code đầu tiên.
+  confidence: 0.85
+missing_information:
+- 'Problem statement cụ thể: ''pos-medicine'' giải quyết vấn đề gì chính xác (nhà
+  thuốc nhỏ lẻ? chuỗi? bệnh viện?)'
+- 'Primary user persona: dược sĩ bán hàng, quản lý nhà thuốc, hay khách hàng?'
+- 'Tech stack quyết định: frontend framework, backend language, database, deployment
+  target'
+- 'Danh sách tính năng MVP: quản lý tồn kho, bán hàng, báo cáo, kê đơn, tích hợp thanh
+  toán?'
+- 'Môi trường deploy: web app, desktop (Electron/Tauri), mobile, hay hybrid POS terminal?'
+- 'Tích hợp ngoài: cổng thanh toán (MoMo, VNPay, SePay), hệ thống kho, bảo hiểm y
+  tế?'
+- 'Yêu cầu tuân thủ pháp lý: dược phẩm Việt Nam có quy định về lưu trữ đơn thuốc và
+  báo cáo thuốc kê đơn'
+- 'Startup command thực sự: chưa có bất kỳ run/build/install command nào'
+- 'Team size và skills: ảnh hưởng đến lựa chọn stack và phân chia module'
+overall_confidence: 0.35
+quality_gate_pass: false
+generated_at: '2026-04-09T04:30:51+00:00'
