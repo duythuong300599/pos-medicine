@@ -1,0 +1,28 @@
+stages:
+  - deploy
+
+# ─── Build & deploy trực tiếp trên VPS qua GitLab Runner ─────────────────────
+# Runner cài trên VPS với executor: shell
+# Runner user phải có quyền chạy docker (thuộc group docker)
+
+deploy:
+  stage: deploy
+  tags:
+    - vps          # tag của runner đăng ký trên VPS
+  script:
+    - |
+      docker build \
+        --build-arg VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
+        --build-arg VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY \
+        -t pos-medicine-web:latest \
+        ./web
+    - docker stop pos-medicine-web 2>/dev/null || true
+    - docker rm pos-medicine-web 2>/dev/null || true
+    - |
+      docker run -d \
+        --name pos-medicine-web \
+        --restart unless-stopped \
+        -p 80:80 \
+        pos-medicine-web:latest
+  only:
+    - main
