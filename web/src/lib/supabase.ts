@@ -27,13 +27,11 @@ export interface Unit {
 export interface Product {
   id: string
   name: string
-  barcode?: string
   category_id?: string
   unit_id: string
   selling_price: number
   cost_price: number
   stock_quantity: number
-  low_stock_threshold: number
   description?: string
   is_deleted: boolean
   created_at?: string
@@ -85,7 +83,6 @@ export type DbProduct = Product & {
   sellingPrice: number
   costPrice: number
   stockQuantity: number
-  lowStockThreshold: number
   isDeleted: boolean
   createdAt: string | undefined
   updatedAt: string | undefined
@@ -122,7 +119,6 @@ export function mapProduct(p: Product): DbProduct {
     sellingPrice: p.selling_price,
     costPrice: p.cost_price,
     stockQuantity: p.stock_quantity,
-    lowStockThreshold: p.low_stock_threshold,
     isDeleted: p.is_deleted,
     createdAt: p.created_at,
     updatedAt: p.updated_at,

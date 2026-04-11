@@ -113,26 +113,22 @@ export async function getProducts(): Promise<DbProduct[]> {
 
 export async function createProduct(input: {
   name: string
-  barcode?: string
   categoryId?: string
   unitId: string
   sellingPrice: number
   costPrice: number
   stockQuantity: number
-  lowStockThreshold: number
   description?: string
 }): Promise<DbProduct> {
   const { data, error } = await supabase
     .from('products')
     .insert({
       name: input.name,
-      barcode: input.barcode || null,
       category_id: input.categoryId || null,
       unit_id: input.unitId,
       selling_price: input.sellingPrice,
       cost_price: input.costPrice,
       stock_quantity: input.stockQuantity,
-      low_stock_threshold: input.lowStockThreshold,
       description: input.description || null,
       is_deleted: false,
     })
@@ -146,25 +142,21 @@ export async function updateProduct(
   id: string,
   input: {
     name?: string
-    barcode?: string
     categoryId?: string
     unitId?: string
     sellingPrice?: number
     costPrice?: number
     stockQuantity?: number
-    lowStockThreshold?: number
     description?: string
   },
 ): Promise<DbProduct> {
   const patch: Record<string, unknown> = {}
   if (input.name !== undefined) patch.name = input.name
-  if (input.barcode !== undefined) patch.barcode = input.barcode
   if (input.categoryId !== undefined) patch.category_id = input.categoryId
   if (input.unitId !== undefined) patch.unit_id = input.unitId
   if (input.sellingPrice !== undefined) patch.selling_price = input.sellingPrice
   if (input.costPrice !== undefined) patch.cost_price = input.costPrice
   if (input.stockQuantity !== undefined) patch.stock_quantity = input.stockQuantity
-  if (input.lowStockThreshold !== undefined) patch.low_stock_threshold = input.lowStockThreshold
   if (input.description !== undefined) patch.description = input.description
   patch.updated_at = new Date().toISOString()
 

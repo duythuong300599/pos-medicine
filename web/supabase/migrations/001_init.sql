@@ -21,13 +21,11 @@ create table if not exists units (
 create table if not exists products (
   id uuid primary key default gen_random_uuid(),
   name text not null,
-  barcode text,
   category_id uuid references categories(id),
   unit_id uuid references units(id) not null,
   selling_price numeric not null,
   cost_price numeric not null,
   stock_quantity integer default 0,
-  low_stock_threshold integer default 10,
   description text,
   is_deleted boolean default false,
   created_at timestamptz default now(),
