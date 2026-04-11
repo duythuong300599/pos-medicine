@@ -1,4 +1,4 @@
-import { ShoppingCart, History, Package, Settings2 } from 'lucide-react'
+import { ShoppingCart, History, Package, Settings2, BarChart2 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import {
   Sidebar,
@@ -16,6 +16,7 @@ const navItems = [
   { title: 'Bán hàng', url: '/', icon: ShoppingCart },
   { title: 'Lịch sử', url: '/history', icon: History },
   { title: 'Kho', url: '/inventory', icon: Package },
+  { title: 'Thống kê', url: '/stats', icon: BarChart2 },
   { title: 'Cài đặt', url: '/settings', icon: Settings2 },
 ]
 

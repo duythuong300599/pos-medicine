@@ -7,6 +7,7 @@ import { SalesPage } from '@/pages/sales-page'
 import { HistoryPage } from '@/pages/history-page'
 import { InventoryPage } from '@/pages/inventory-page'
 import { SettingsPage } from '@/pages/settings-page'
+import { StatsPage } from '@/pages/stats-page'
 import './index.css'
 
 createRoot(document.getElementById('root')!).render(
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/" element={<SalesPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/inventory" element={<InventoryPage />} />
+            <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
         </Routes>
