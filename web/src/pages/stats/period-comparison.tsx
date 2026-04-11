@@ -1,3 +1,4 @@
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import type { PeriodComparison as PeriodComparisonData } from '@/lib/dashboard-utils'
@@ -50,15 +51,26 @@ export function PeriodComparison({ data }: PeriodComparisonProps) {
           return (
             <div key={row.label} className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{row.label}</span>
-              <div className="text-right">
+              <div className="flex items-center gap-1.5 text-right">
                 <span className="font-medium">{row.format(row.current)}</span>
                 {delta !== null && (
                   <span
                     className={cn(
-                      'ml-2 text-xs',
-                      delta >= 0 ? 'text-green-600' : 'text-red-600',
+                      'inline-flex items-center gap-0.5 text-xs font-medium',
+                      delta > 0
+                        ? 'text-emerald-600'
+                        : delta < 0
+                          ? 'text-red-500'
+                          : 'text-muted-foreground',
                     )}
                   >
+                    {delta > 0 ? (
+                      <TrendingUp className="h-3 w-3" />
+                    ) : delta < 0 ? (
+                      <TrendingDown className="h-3 w-3" />
+                    ) : (
+                      <Minus className="h-3 w-3" />
+                    )}
                     {delta >= 0 ? '+' : ''}
                     {delta.toFixed(1)}%
                   </span>
