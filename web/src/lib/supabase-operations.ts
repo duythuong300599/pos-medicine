@@ -345,6 +345,52 @@ export async function adjustStock(
   if (logError) throw logError
 }
 
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+
+export interface DashboardRawData {
+  transactions: DbTransaction[]
+  transactionItems: DbTransactionItem[]
+  products: DbProduct[]
+}
+
+/**
+ * Fetch all data needed for dashboard aggregation in a given date range.
+ */
+export async function getDashboardData(from: Date, to: Date): Promise<DashboardRawData> {
+  const fromISO = from.toISOString()
+  const toISO = to.toISOString()
+
+  const { data: txRaw, error: txErr } = await supabase
+    .from('transactions')
+    .select('*')
+    .gte('created_at', fromISO)
+    .lte('created_at', toISO)
+    .order('created_at', { ascending: true })
+  if (txErr) throw txErr
+
+  const transactions = (txRaw ?? []).map(mapTransaction)
+
+  let transactionItems: DbTransactionItem[] = []
+  if (transactions.length > 0) {
+    const txIds = transactions.map((t) => t.id)
+    const { data: itemsRaw, error: itemsErr } = await supabase
+      .from('transaction_items')
+      .select('*')
+      .in('transaction_id', txIds)
+    if (itemsErr) throw itemsErr
+    transactionItems = (itemsRaw ?? []).map(mapTransactionItem)
+  }
+
+  // Fetch all products including soft-deleted ones to preserve cost lookup for past sales
+  const { data: prodsRaw, error: prodsErr } = await supabase
+    .from('products')
+    .select('*')
+  if (prodsErr) throw prodsErr
+  const products = (prodsRaw ?? []).map(mapProduct)
+
+  return { transactions, transactionItems, products }
+}
+
 export async function getInventoryLogs(filter: {
   productId?: string
   from?: number
