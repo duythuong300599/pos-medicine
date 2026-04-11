@@ -14,37 +14,6 @@ import { KpiCards } from './stats/kpi-cards'
 import { RevenueChart } from './stats/revenue-chart'
 import { PeriodComparison } from './stats/period-comparison'
 
-// ─── Mock data (tắt khi có data thực) ────────────────────────────────────────
-const USE_MOCK = true
-
-const MOCK_DATA: DashboardAggregated = {
-  stats: {
-    revenue: 18_750_000,
-    profit: 5_620_000,
-    orderCount: 47,
-    totalDiscount: 450_000,
-    growthRate: 12.4,
-  },
-  dailyRevenue: [
-    { date: '05/04', revenue: 2_100_000 },
-    { date: '06/04', revenue: 3_450_000 },
-    { date: '07/04', revenue: 1_800_000 },
-    { date: '08/04', revenue: 2_900_000 },
-    { date: '09/04', revenue: 3_200_000 },
-    { date: '10/04', revenue: 2_650_000 },
-    { date: '11/04', revenue: 2_650_000 },
-  ],
-  paymentSplit: { cash: 11_200_000, qr: 7_550_000 },
-  comparison: {
-    currentRevenue: 18_750_000,
-    previousRevenue: 16_680_000,
-    currentOrders: 47,
-    previousOrders: 41,
-    currentProfit: 5_620_000,
-    previousProfit: 4_890_000,
-  },
-}
-
 function StatsSkeletons() {
   return (
     <div className="space-y-6 p-6">
@@ -72,14 +41,10 @@ function EmptyState() {
 
 export function StatsPage() {
   const [filter, setFilter] = useState<StatsDateFilter>('7days')
-  const [data, setData] = useState<DashboardAggregated | null>(USE_MOCK ? MOCK_DATA : null)
-  const [loading, setLoading] = useState(!USE_MOCK)
+  const [data, setData] = useState<DashboardAggregated | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const loadData = useCallback(async () => {
-    if (USE_MOCK) {
-      setData(MOCK_DATA)
-      return
-    }
     setLoading(true)
     try {
       const { from, to } = getStatsDateRange(filter)
