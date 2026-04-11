@@ -1,4 +1,4 @@
-import { Plus, AlertTriangle } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -20,7 +20,6 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, unit, onAddToCart, onEdit, onDelete }: ProductCardProps) {
-  const isLowStock = product.stockQuantity <= product.lowStockThreshold
   const isOutOfStock = product.stockQuantity === 0
 
   return (
@@ -29,15 +28,10 @@ export function ProductCard({ product, unit, onAddToCart, onEdit, onDelete }: Pr
         <div
           className={[
             'relative flex flex-col rounded-lg border bg-card p-3 shadow-sm transition-all duration-200 cursor-pointer select-none',
-            'hover:-translate-y-0.5 hover:shadow-md active:scale-[0.97] active:shadow-sm',
-            isLowStock ? 'border-orange-300 bg-orange-50' : 'hover:border-primary/40',
+            'hover:-translate-y-0.5 hover:shadow-md active:scale-[0.97] active:shadow-sm hover:border-primary/40',
           ].join(' ')}
         >
-          {isLowStock && (
-            <AlertTriangle className="absolute right-2 top-2 h-3.5 w-3.5 text-orange-500" />
-          )}
-
-          <p className="line-clamp-2 text-sm font-medium leading-snug pr-5">{product.name}</p>
+          <p className="line-clamp-2 text-sm font-medium leading-snug">{product.name}</p>
 
           {product.description && (
             <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{product.description}</p>
@@ -49,11 +43,8 @@ export function ProductCard({ product, unit, onAddToCart, onEdit, onDelete }: Pr
                 {fmt.format(product.sellingPrice)}₫
               </p>
               <Badge
-                variant={isOutOfStock ? 'destructive' : isLowStock ? 'outline' : 'secondary'}
-                className={[
-                  'mt-0.5 text-xs',
-                  isLowStock && !isOutOfStock ? 'border-orange-400 text-orange-600' : '',
-                ].join(' ')}
+                variant={isOutOfStock ? 'destructive' : 'secondary'}
+                className="mt-0.5 text-xs"
               >
                 {unit?.abbreviation ?? ''} · {product.stockQuantity}
               </Badge>

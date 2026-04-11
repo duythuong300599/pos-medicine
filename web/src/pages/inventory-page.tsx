@@ -59,7 +59,6 @@ export function InventoryPage() {
 
   const unitsMap = Object.fromEntries(units.map((u) => [u.id, u]))
   const productsMap = Object.fromEntries(products.map((p) => [p.id, p]))
-  const lowStock = products.filter((p) => p.stockQuantity <= p.lowStockThreshold)
 
   const handleEdit = (p: DbProduct) => {
     setEditProduct(p)
@@ -90,29 +89,12 @@ export function InventoryPage() {
           <TabsTrigger value="all">
             Tất cả ({products.length})
           </TabsTrigger>
-          <TabsTrigger value="low" className="relative">
-            Thiếu hàng
-            {lowStock.length > 0 && (
-              <Badge variant="destructive" className="ml-1.5 h-4 px-1 text-[10px]">
-                {lowStock.length}
-              </Badge>
-            )}
-          </TabsTrigger>
           <TabsTrigger value="history">Lịch sử</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="flex-1 min-h-0 mt-0">
           <ProductTable
             products={products}
-            unitsMap={unitsMap}
-            onAdjust={setAdjustProduct}
-            onEdit={handleEdit}
-          />
-        </TabsContent>
-
-        <TabsContent value="low" className="flex-1 min-h-0 mt-0">
-          <ProductTable
-            products={lowStock}
             unitsMap={unitsMap}
             onAdjust={setAdjustProduct}
             onEdit={handleEdit}
@@ -173,7 +155,6 @@ function ProductTable({ products, unitsMap, onAdjust, onEdit }: ProductTableProp
       {/* Mobile: card list */}
       <div className="sm:hidden divide-y px-4 mt-2">
         {products.map((p) => {
-          const isLow = p.stockQuantity <= p.lowStockThreshold
           const isOut = p.stockQuantity === 0
           const unit = unitsMap[p.unitId]
           return (
@@ -181,13 +162,10 @@ function ProductTable({ products, unitsMap, onAdjust, onEdit }: ProductTableProp
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="font-medium text-sm leading-tight">{p.name}</p>
-                  {p.barcode && (
-                    <p className="text-xs text-muted-foreground mt-0.5">{p.barcode}</p>
-                  )}
                 </div>
                 <Badge
-                  variant={isOut ? 'destructive' : isLow ? 'outline' : 'secondary'}
-                  className={`shrink-0 ${isLow && !isOut ? 'border-orange-400 text-orange-600' : ''}`}
+                  variant={isOut ? 'destructive' : 'secondary'}
+                  className="shrink-0"
                 >
                   {p.stockQuantity} {unit?.abbreviation}
                 </Badge>
@@ -224,19 +202,16 @@ function ProductTable({ products, unitsMap, onAdjust, onEdit }: ProductTableProp
         </thead>
         <tbody className="divide-y">
           {products.map((p) => {
-            const isLow = p.stockQuantity <= p.lowStockThreshold
             const isOut = p.stockQuantity === 0
             const unit = unitsMap[p.unitId]
             return (
               <tr key={p.id} className="hover:bg-muted/40 transition-colors">
                 <td className="py-2.5 pr-4 pl-6">
                   <p className="font-medium">{p.name}</p>
-                  {p.barcode && <p className="text-xs text-muted-foreground">{p.barcode}</p>}
                 </td>
                 <td className="py-2.5 text-right">
                   <Badge
-                    variant={isOut ? 'destructive' : isLow ? 'outline' : 'secondary'}
-                    className={isLow && !isOut ? 'border-orange-400 text-orange-600' : ''}
+                    variant={isOut ? 'destructive' : 'secondary'}
                   >
                     {p.stockQuantity} {unit?.abbreviation}
                   </Badge>

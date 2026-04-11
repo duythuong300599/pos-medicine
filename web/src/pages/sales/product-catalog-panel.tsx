@@ -56,8 +56,7 @@ export function ProductCatalogPanel() {
   const filtered = products.filter((p) => {
     const matchSearch =
       !search ||
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      (p.barcode && p.barcode.includes(search))
+      p.name.toLowerCase().includes(search.toLowerCase())
     const matchCat = !selectedCategory || p.categoryId === selectedCategory
     return matchSearch && matchCat
   })
@@ -97,7 +96,7 @@ export function ProductCatalogPanel() {
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Tìm thuốc, barcode..."
+              placeholder="Tìm thuốc..."
               className="pl-8"
               value={search}
               onChange={(e) => setSearch(e.target.value)}

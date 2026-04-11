@@ -26,13 +26,11 @@ const NO_CATEGORY = '__none__'
 
 interface FormValues {
   name: string
-  barcode: string
   categoryId: string
   unitId: string
   sellingPrice: number
   costPrice: number
   stockQuantity: number
-  lowStockThreshold: number
   description: string
 }
 
@@ -50,13 +48,11 @@ export function ProductFormDialog({ open, onOpenChange, product }: ProductFormDi
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<FormValues>({
     defaultValues: {
       name: '',
-      barcode: '',
       categoryId: NO_CATEGORY,
       unitId: '',
       sellingPrice: 0,
       costPrice: 0,
       stockQuantity: 0,
-      lowStockThreshold: 10,
       description: '',
     },
   })
@@ -78,25 +74,21 @@ export function ProductFormDialog({ open, onOpenChange, product }: ProductFormDi
     if (product) {
       reset({
         name: product.name,
-        barcode: product.barcode ?? '',
         categoryId: product.categoryId ?? NO_CATEGORY,
         unitId: product.unitId,
         sellingPrice: product.sellingPrice,
         costPrice: product.costPrice,
         stockQuantity: product.stockQuantity,
-        lowStockThreshold: product.lowStockThreshold,
         description: product.description ?? '',
       })
     } else {
       reset({
         name: '',
-        barcode: '',
         categoryId: NO_CATEGORY,
         unitId: units[0]?.id ?? '',
         sellingPrice: 0,
         costPrice: 0,
         stockQuantity: 0,
-        lowStockThreshold: 10,
         description: '',
       })
     }
@@ -109,26 +101,22 @@ export function ProductFormDialog({ open, onOpenChange, product }: ProductFormDi
       if (product) {
         await updateProduct(product.id, {
           name: values.name,
-          barcode: values.barcode || undefined,
           categoryId,
           unitId: values.unitId,
           sellingPrice: Number(values.sellingPrice),
           costPrice: Number(values.costPrice),
           stockQuantity: Number(values.stockQuantity),
-          lowStockThreshold: Number(values.lowStockThreshold),
           description: values.description || undefined,
         })
         toast.success('Đã cập nhật sản phẩm')
       } else {
         await createProduct({
           name: values.name,
-          barcode: values.barcode || undefined,
           categoryId,
           unitId: values.unitId,
           sellingPrice: Number(values.sellingPrice),
           costPrice: Number(values.costPrice),
           stockQuantity: Number(values.stockQuantity),
-          lowStockThreshold: Number(values.lowStockThreshold),
           description: values.description || undefined,
         })
         toast.success('Đã thêm sản phẩm')
@@ -162,26 +150,20 @@ export function ProductFormDialog({ open, onOpenChange, product }: ProductFormDi
             {errors.name && <p className="text-xs text-destructive">Bắt buộc nhập tên</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor="barcode">Barcode</Label>
-              <Input id="barcode" {...register('barcode')} placeholder="0123456789" />
-            </div>
-            <div className="space-y-2">
-              <Label>Đơn vị *</Label>
-              <Select value={unitId} onValueChange={(v) => setValue('unitId', v)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Chọn đơn vị" />
-                </SelectTrigger>
-                <SelectContent>
-                  {units.map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
-                      {u.name} ({u.abbreviation})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <Label>Đơn vị *</Label>
+            <Select value={unitId} onValueChange={(v) => setValue('unitId', v)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn đơn vị" />
+              </SelectTrigger>
+              <SelectContent>
+                {units.map((u) => (
+                  <SelectItem key={u.id} value={u.id}>
+                    {u.name} ({u.abbreviation})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
@@ -222,25 +204,14 @@ export function ProductFormDialog({ open, onOpenChange, product }: ProductFormDi
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-2">
-              <Label htmlFor="stock">Tồn kho</Label>
-              <Input
-                id="stock"
-                type="number"
-                min={0}
-                {...register('stockQuantity', { min: 0 })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="low-stock">Cảnh báo thiếu</Label>
-              <Input
-                id="low-stock"
-                type="number"
-                min={0}
-                {...register('lowStockThreshold', { min: 0 })}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="stock">Tồn kho</Label>
+            <Input
+              id="stock"
+              type="number"
+              min={0}
+              {...register('stockQuantity', { min: 0 })}
+            />
           </div>
 
           <div className="space-y-2">
