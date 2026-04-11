@@ -41,14 +41,11 @@ export function PaymentDonutChart({ data }: PaymentDonutChartProps) {
             <Legend
               iconSize={8}
               iconType="circle"
+              wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
               formatter={(value: string, entry: { payload?: { value?: number } }) => {
                 const amount = entry.payload?.value ?? 0
                 const pct = total > 0 ? ((amount / total) * 100).toFixed(0) : '0'
-                return (
-                  <span style={{ fontSize: 12 }}>
-                    {value} ({pct}%) — {fmt.format(amount)}đ
-                  </span>
-                )
+                return `${value} (${pct}%) — ${fmt.format(amount)}đ`
               }}
             />
           </PieChart>
