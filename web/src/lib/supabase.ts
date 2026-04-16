@@ -47,6 +47,17 @@ export interface Transaction {
   payment_method: 'cash' | 'qr'
   notes?: string
   created_at?: string
+  sale_date?: string
+}
+
+export interface TransactionEditLog {
+  id: string
+  transaction_id: string
+  field_name: string
+  old_value?: string
+  new_value?: string
+  edit_reason?: string
+  created_at?: string
 }
 
 export interface TransactionItem {
@@ -93,6 +104,16 @@ export type DbTransaction = Transaction & {
   totalAmount: number
   paymentMethod: 'cash' | 'qr'
   createdAt: string | undefined
+  saleDate: string | undefined
+}
+
+export type DbTransactionEditLog = TransactionEditLog & {
+  transactionId: string
+  fieldName: string
+  oldValue: string | undefined
+  newValue: string | undefined
+  editReason: string | undefined
+  createdAt: string | undefined
 }
 export type DbTransactionItem = TransactionItem & {
   transactionId: string
@@ -134,6 +155,20 @@ export function mapTransaction(t: Transaction): DbTransaction {
     totalAmount: t.total_amount,
     paymentMethod: t.payment_method,
     createdAt: t.created_at,
+    saleDate: t.sale_date,
+  }
+}
+
+/** Map snake_case TransactionEditLog → camelCase for UI */
+export function mapTransactionEditLog(l: TransactionEditLog): DbTransactionEditLog {
+  return {
+    ...l,
+    transactionId: l.transaction_id,
+    fieldName: l.field_name,
+    oldValue: l.old_value,
+    newValue: l.new_value,
+    editReason: l.edit_reason,
+    createdAt: l.created_at,
   }
 }
 

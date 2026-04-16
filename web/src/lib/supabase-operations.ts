@@ -1,5 +1,5 @@
-import { supabase, mapProduct, mapTransaction, mapTransactionItem, mapInventoryLog } from './supabase'
-import type { DbProduct, DbTransaction, DbTransactionItem, DbInventoryLog, Unit, Category } from './supabase'
+import { supabase, mapProduct, mapTransaction, mapTransactionItem, mapInventoryLog, mapTransactionEditLog } from './supabase'
+import type { DbProduct, DbTransaction, DbTransactionItem, DbInventoryLog, DbTransactionEditLog, Unit, Category } from './supabase'
 
 // ─── Categories ───────────────────────────────────────────────────────────────
 
@@ -187,6 +187,8 @@ export interface CreateTransactionInput {
   total: number
   paymentMethod: 'cash' | 'qr'
   notes?: string
+  /** Ngày bán thực tế (ISO string). Mặc định = now() nếu không truyền. */
+  saleDate?: string
   items: {
     productId: string
     productName: string
@@ -216,6 +218,7 @@ export async function createTransaction(input: CreateTransactionInput): Promise<
       total_amount: input.total,
       payment_method: input.paymentMethod,
       notes: input.notes || null,
+      sale_date: input.saleDate || new Date().toISOString(),
     })
     .select()
     .single()
@@ -281,13 +284,13 @@ export async function getTransactions(filter: {
   from?: number // timestamp ms
   to?: number // timestamp ms
 }): Promise<DbTransaction[]> {
-  let query = supabase.from('transactions').select('*').order('created_at', { ascending: false })
+  let query = supabase.from('transactions').select('*').order('sale_date', { ascending: false })
 
   if (filter.from) {
-    query = query.gte('created_at', new Date(filter.from).toISOString())
+    query = query.gte('sale_date', new Date(filter.from).toISOString())
   }
   if (filter.to) {
-    query = query.lte('created_at', new Date(filter.to).toISOString())
+    query = query.lte('sale_date', new Date(filter.to).toISOString())
   }
 
   const { data, error } = await query
@@ -302,6 +305,201 @@ export async function getTransactionItems(transactionId: string): Promise<DbTran
     .eq('transaction_id', transactionId)
   if (error) throw error
   return (data ?? []).map(mapTransactionItem)
+}
+
+export interface UpdateTransactionInput {
+  paymentMethod?: 'cash' | 'qr'
+  notes?: string | null
+  saleDate?: string
+  discountAmount?: number
+  subtotal?: number
+  total?: number
+  /** Lý do chỉnh sửa để ghi vào audit log */
+  editReason?: string
+}
+
+/**
+ * Cập nhật thông tin hoá đơn và ghi audit log cho từng trường thay đổi.
+ * Chỉ hỗ trợ chỉnh sửa metadata (không thay đổi items để tránh phức tạp hóa tồn kho).
+ */
+export async function updateTransaction(
+  id: string,
+  input: UpdateTransactionInput,
+  original: DbTransaction,
+): Promise<DbTransaction> {
+  const patch: Record<string, unknown> = {}
+  const logs: { field_name: string; old_value: string | null; new_value: string | null }[] = []
+
+  if (input.paymentMethod !== undefined && input.paymentMethod !== original.payment_method) {
+    patch.payment_method = input.paymentMethod
+    logs.push({
+      field_name: 'payment_method',
+      old_value: original.payment_method,
+      new_value: input.paymentMethod,
+    })
+  }
+
+  if (input.notes !== undefined && input.notes !== original.notes) {
+    patch.notes = input.notes
+    logs.push({
+      field_name: 'notes',
+      old_value: original.notes ?? null,
+      new_value: input.notes,
+    })
+  }
+
+  if (input.saleDate !== undefined && input.saleDate !== original.sale_date) {
+    patch.sale_date = input.saleDate
+    logs.push({
+      field_name: 'sale_date',
+      old_value: original.sale_date ?? null,
+      new_value: input.saleDate,
+    })
+  }
+
+  if (input.discountAmount !== undefined && input.discountAmount !== original.discount_amount) {
+    patch.discount_amount = input.discountAmount
+    logs.push({
+      field_name: 'discount_amount',
+      old_value: String(original.discount_amount),
+      new_value: String(input.discountAmount),
+    })
+  }
+
+  if (input.subtotal !== undefined && input.subtotal !== original.subtotal) {
+    patch.subtotal = input.subtotal
+    logs.push({
+      field_name: 'subtotal',
+      old_value: String(original.subtotal),
+      new_value: String(input.subtotal),
+    })
+  }
+
+  if (input.total !== undefined && input.total !== original.total_amount) {
+    patch.total_amount = input.total
+    logs.push({
+      field_name: 'total_amount',
+      old_value: String(original.total_amount),
+      new_value: String(input.total),
+    })
+  }
+
+  if (Object.keys(patch).length === 0) {
+    return original
+  }
+
+  const { data, error } = await supabase
+    .from('transactions')
+    .update(patch)
+    .eq('id', id)
+    .select()
+    .single()
+  if (error) throw error
+
+  // Ghi audit logs
+  if (logs.length > 0) {
+    const logsToInsert = logs.map((l) => ({
+      transaction_id: id,
+      field_name: l.field_name,
+      old_value: l.old_value,
+      new_value: l.new_value,
+      edit_reason: input.editReason || null,
+    }))
+    const { error: logError } = await supabase.from('transaction_edit_logs').insert(logsToInsert)
+    if (logError) throw logError
+  }
+
+  return mapTransaction(data)
+}
+
+export interface UpdateItemPriceInput {
+  itemId: string
+  oldPrice: number
+  newPrice: number
+}
+
+/**
+ * Cập nhật giá bán của từng item trong hoá đơn đã lưu.
+ * - Cập nhật unit_price và subtotal của từng transaction_item bị thay đổi
+ * - Tính lại transactions.subtotal và total_amount
+ * - Ghi audit logs cho từng item thay đổi giá
+ */
+export async function updateTransactionItemPrices(
+  transactionId: string,
+  original: DbTransaction,
+  changes: UpdateItemPriceInput[],
+  editReason?: string,
+): Promise<DbTransaction> {
+  const actualChanges = changes.filter((c) => c.oldPrice !== c.newPrice)
+  if (actualChanges.length === 0) return original
+
+  // 1. Fetch all items để tính lại subtotal
+  const { data: allItems, error: fetchErr } = await supabase
+    .from('transaction_items')
+    .select('id, unit_price, quantity, subtotal')
+    .eq('transaction_id', transactionId)
+  if (fetchErr) throw fetchErr
+
+  // 2. Cập nhật từng item bị thay đổi giá
+  for (const change of actualChanges) {
+    const item = (allItems ?? []).find((i) => i.id === change.itemId)
+    if (!item) continue
+    const newSubtotal = change.newPrice * item.quantity
+    const { error } = await supabase
+      .from('transaction_items')
+      .update({ unit_price: change.newPrice, subtotal: newSubtotal })
+      .eq('id', change.itemId)
+    if (error) throw error
+  }
+
+  // 3. Tính lại subtotal và total_amount cho transaction
+  const newSubtotals = (allItems ?? []).map((item) => {
+    const change = actualChanges.find((c) => c.itemId === item.id)
+    const price = change ? change.newPrice : item.unit_price
+    return price * item.quantity
+  })
+  const newSubtotal = newSubtotals.reduce((s, v) => s + v, 0)
+  const discount = original.discount_amount ?? 0
+  const newTotal = Math.max(0, newSubtotal - discount)
+
+  const txPatch: Record<string, unknown> = {}
+  if (newSubtotal !== original.subtotal) txPatch.subtotal = newSubtotal
+  if (newTotal !== original.total_amount) txPatch.total_amount = newTotal
+
+  let updatedTx = original
+  if (Object.keys(txPatch).length > 0) {
+    const { data, error } = await supabase
+      .from('transactions')
+      .update(txPatch)
+      .eq('id', transactionId)
+      .select()
+      .single()
+    if (error) throw error
+    updatedTx = mapTransaction(data)
+  }
+
+  // 4. Ghi audit logs
+  const logsToInsert = actualChanges.map((c) => ({
+    transaction_id: transactionId,
+    field_name: `item_price:${c.itemId}`,
+    old_value: String(c.oldPrice),
+    new_value: String(c.newPrice),
+    edit_reason: editReason || null,
+  }))
+  const { error: logErr } = await supabase.from('transaction_edit_logs').insert(logsToInsert)
+  if (logErr) throw logErr
+
+  return updatedTx
+}
+
+export async function getTransactionEditLogs(transactionId: string): Promise<DbTransactionEditLog[]> {
+  const { data, error } = await supabase
+    .from('transaction_edit_logs')
+    .select('*')
+    .eq('transaction_id', transactionId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []).map(mapTransactionEditLog)
 }
 
 // ─── Inventory / Stock Adjustment ────────────────────────────────────────────

@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Banknote, QrCode } from 'lucide-react'
+import { Banknote, QrCode, CalendarDays } from 'lucide-react'
+import { format } from 'date-fns'
 import { toast } from 'sonner'
 import { createTransaction } from '@/lib/supabase-operations'
 import type { DbTransaction, DbTransactionItem } from '@/lib/supabase'
@@ -18,6 +19,11 @@ import {
 
 const fmt = new Intl.NumberFormat('vi-VN')
 
+/** Chuyển Date sang chuỗi YYYY-MM-DD cho input[type=date] */
+function toDateInputValue(d: Date): string {
+  return format(d, 'yyyy-MM-dd')
+}
+
 interface CheckoutDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -27,6 +33,7 @@ interface CheckoutDialogProps {
 export function CheckoutDialog({ open, onOpenChange, onSuccess }: CheckoutDialogProps) {
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'qr'>('cash')
   const [notes, setNotes] = useState('')
+  const [saleDate, setSaleDate] = useState(toDateInputValue(new Date()))
   const [loading, setLoading] = useState(false)
 
   const { items, discountType, discountValue, getSubtotal, getDiscountAmount, getTotal, clearCart } =
@@ -41,6 +48,9 @@ export function CheckoutDialog({ open, onOpenChange, onSuccess }: CheckoutDialog
     setLoading(true)
     try {
       const transactionCode = `HD${String(Date.now()).slice(-8)}`
+      // Chuyển ngày bán (YYYY-MM-DD) thành ISO với giờ hiện tại để giữ timezone chính xác
+      const saleDateISO = new Date(saleDate + 'T' + format(new Date(), 'HH:mm:ss')).toISOString()
+
       const { transaction, items: txItems } = await createTransaction({
         transactionCode,
         subtotal,
@@ -48,6 +58,7 @@ export function CheckoutDialog({ open, onOpenChange, onSuccess }: CheckoutDialog
         total,
         paymentMethod,
         notes: notes.trim() || undefined,
+        saleDate: saleDateISO,
         items: items.map((item) => ({
           productId: item.productId,
           productName: item.productName,
@@ -62,6 +73,7 @@ export function CheckoutDialog({ open, onOpenChange, onSuccess }: CheckoutDialog
       clearCart()
       onOpenChange(false)
       setNotes('')
+      setSaleDate(toDateInputValue(new Date()))
       onSuccess(transaction, txItems)
       toast.success('Thanh toán thành công!')
     } catch {
@@ -79,6 +91,22 @@ export function CheckoutDialog({ open, onOpenChange, onSuccess }: CheckoutDialog
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Sale date */}
+          <div className="space-y-2">
+            <Label htmlFor="sale-date" className="flex items-center gap-1.5">
+              <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
+              Ngày bán
+            </Label>
+            <input
+              id="sale-date"
+              type="date"
+              value={saleDate}
+              max={toDateInputValue(new Date())}
+              onChange={(e) => setSaleDate(e.target.value)}
+              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
+
           {/* Payment method */}
           <div className="space-y-2">
             <Label>Phương thức thanh toán</Label>

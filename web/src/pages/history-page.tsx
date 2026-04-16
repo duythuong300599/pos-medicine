@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
+import { Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import { getTransactions, getTransactionItems } from '@/lib/supabase-operations'
 import type { DbTransaction, DbTransactionItem } from '@/lib/supabase'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -12,7 +14,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog'
+import { TransactionEditDialog } from './history/transaction-edit-dialog'
 
 const fmt = new Intl.NumberFormat('vi-VN')
 
@@ -43,6 +47,8 @@ export function HistoryPage() {
   const [selectedTx, setSelectedTx] = useState<DbTransaction | null>(null)
   const [txItems, setTxItems] = useState<DbTransactionItem[]>([])
   const [detailLoading, setDetailLoading] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [editingTx, setEditingTx] = useState<DbTransaction | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -72,6 +78,15 @@ export function HistoryPage() {
     } finally {
       setDetailLoading(false)
     }
+  }
+
+  const handleEditSaved = (updated: DbTransaction) => {
+    setTransactions((prev) => prev.map((t) => (t.id === updated.id ? updated : t)))
+    setSelectedTx(updated)
+  }
+
+  const handleItemsUpdated = (items: DbTransactionItem[]) => {
+    setTxItems(items)
   }
 
   const totalRevenue = transactions.reduce((sum, t) => sum + t.totalAmount, 0)
@@ -141,8 +156,8 @@ export function HistoryPage() {
                   <div>
                     <p className="font-medium text-sm">{tx.transactionCode}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {tx.createdAt
-                        ? format(new Date(tx.createdAt), 'HH:mm dd/MM/yyyy', { locale: vi })
+                      {(tx.saleDate ?? tx.createdAt)
+                        ? format(new Date((tx.saleDate ?? tx.createdAt)!), 'HH:mm dd/MM/yyyy', { locale: vi })
                         : ''}
                     </p>
                   </div>
@@ -173,8 +188,8 @@ export function HistoryPage() {
           {selectedTx && (
             <div className="space-y-3 text-sm">
               <div className="text-muted-foreground text-xs">
-                {selectedTx.createdAt
-                  ? format(new Date(selectedTx.createdAt), 'HH:mm dd/MM/yyyy', { locale: vi })
+                {(selectedTx.saleDate ?? selectedTx.createdAt)
+                  ? format(new Date((selectedTx.saleDate ?? selectedTx.createdAt)!), 'HH:mm dd/MM/yyyy', { locale: vi })
                   : ''}
                 {' · '}
                 {selectedTx.paymentMethod === 'cash' ? 'Tiền mặt' : 'Chuyển khoản'}
@@ -224,8 +239,32 @@ export function HistoryPage() {
               )}
             </div>
           )}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex gap-1.5"
+              onClick={() => {
+                setEditingTx(selectedTx)
+                setEditOpen(true)
+              }}
+            >
+              <Pencil className="h-3.5 w-3.5" />
+              Chỉnh sửa
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Edit dialog */}
+      <TransactionEditDialog
+        transaction={editingTx}
+        txItems={editingTx?.id === selectedTx?.id ? txItems : []}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSaved={handleEditSaved}
+        onItemsUpdated={handleItemsUpdated}
+      />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Minus, Plus, Trash2, ShoppingCart } from 'lucide-react'
+import { Minus, Plus, Trash2, ShoppingCart, Pencil } from 'lucide-react'
 import { useCartStore } from '@/stores/cart-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,6 +32,7 @@ export function CartPanel({ onCheckoutSuccess, showHeader = true }: CartPanelPro
     getDiscountAmount,
     getTotal,
     updateQuantity,
+    updatePrice,
     removeItem,
     setDiscount,
   } = useCartStore()
@@ -75,6 +76,7 @@ export function CartPanel({ onCheckoutSuccess, showHeader = true }: CartPanelPro
                 key={item.productId}
                 item={item}
                 onUpdateQty={(qty) => updateQuantity(item.productId, qty)}
+                onUpdatePrice={(price) => updatePrice(item.productId, price)}
                 onRemove={() => removeItem(item.productId)}
               />
             ))}
@@ -157,19 +159,64 @@ export function CartPanel({ onCheckoutSuccess, showHeader = true }: CartPanelPro
 interface CartItemRowProps {
   item: { productId: string; productName: string; unitName: string; unitPrice: number; quantity: number }
   onUpdateQty: (qty: number) => void
+  onUpdatePrice: (price: number) => void
   onRemove: () => void
 }
 
-function CartItemRow({ item, onUpdateQty, onRemove }: CartItemRowProps) {
+function CartItemRow({ item, onUpdateQty, onUpdatePrice, onRemove }: CartItemRowProps) {
   const fmt = new Intl.NumberFormat('vi-VN')
+  const [editingPrice, setEditingPrice] = useState(false)
+  const [priceInput, setPriceInput] = useState(String(item.unitPrice))
+
+  const handlePriceBlur = () => {
+    const val = parseInt(priceInput.replace(/\D/g, ''), 10)
+    if (!isNaN(val) && val > 0) {
+      onUpdatePrice(val)
+      setPriceInput(String(val))
+    } else {
+      setPriceInput(String(item.unitPrice))
+    }
+    setEditingPrice(false)
+  }
 
   return (
     <div className="flex items-start gap-3 px-4 py-3 animate-in slide-in-from-right-4 fade-in duration-200">
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium leading-tight truncate">{item.productName}</p>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {fmt.format(item.unitPrice)}₫/{item.unitName}
-        </p>
+        {/* Giá bán — click để chỉnh sửa */}
+        {editingPrice ? (
+          <div className="flex items-center gap-1 mt-0.5">
+            <input
+              type="number"
+              min={1}
+              value={priceInput}
+              autoFocus
+              onChange={(e) => setPriceInput(e.target.value)}
+              onBlur={handlePriceBlur}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') e.currentTarget.blur()
+                if (e.key === 'Escape') {
+                  setPriceInput(String(item.unitPrice))
+                  setEditingPrice(false)
+                }
+              }}
+              className="h-6 w-28 rounded border border-input bg-transparent px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+            <span className="text-xs text-muted-foreground">₫/{item.unitName}</span>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="flex items-center gap-1 mt-0.5 text-xs text-muted-foreground hover:text-foreground group"
+            onClick={() => {
+              setPriceInput(String(item.unitPrice))
+              setEditingPrice(true)
+            }}
+          >
+            <span>{fmt.format(item.unitPrice)}₫/{item.unitName}</span>
+            <Pencil className="h-2.5 w-2.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+          </button>
+        )}
         <p className="text-xs font-medium text-primary mt-0.5">
           = {fmt.format(item.unitPrice * item.quantity)}₫
         </p>
