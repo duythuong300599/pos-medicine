@@ -1,4 +1,4 @@
-import { format, eachDayOfInterval, startOfDay } from 'date-fns'
+import { format, eachDayOfInterval, eachMonthOfInterval, startOfDay, startOfMonth } from 'date-fns'
 import type { DashboardRawData } from './supabase-operations'
 import type { DbProduct } from './supabase'
 
@@ -38,7 +38,7 @@ export interface DashboardAggregated {
   comparison: PeriodComparison
 }
 
-export type StatsDateFilter = 'today' | '7days' | '30days' | 'month'
+export type StatsDateFilter = 'today' | '7days' | '30days' | 'month' | 'all'
 
 // ─── Main aggregation ─────────────────────────────────────────────────────────
 
@@ -105,6 +105,24 @@ function computeDailyRevenue(
   from: Date,
   to: Date,
 ): DailyRevenue[] {
+  const daysDiff = (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)
+
+  if (daysDiff > 90) {
+    const months = eachMonthOfInterval({ start: from, end: to })
+    const bucketMap = new Map<string, number>()
+    for (const m of months) {
+      bucketMap.set(format(m, 'MM/yyyy'), 0)
+    }
+
+    for (const tx of transactions) {
+      if (!tx.createdAt) continue
+      const key = format(startOfMonth(new Date(tx.createdAt)), 'MM/yyyy')
+      bucketMap.set(key, (bucketMap.get(key) ?? 0) + tx.totalAmount)
+    }
+
+    return Array.from(bucketMap.entries()).map(([date, revenue]) => ({ date, revenue }))
+  }
+
   const days = eachDayOfInterval({ start: from, end: to })
   const bucketMap = new Map<string, number>()
   for (const d of days) {
@@ -155,6 +173,10 @@ export function getStatsDateRange(filter: StatsDateFilter): { from: Date; to: Da
     }
     case 'month': {
       const start = new Date(now.getFullYear(), now.getMonth(), 1)
+      return { from: start, to: endOfToday }
+    }
+    case 'all': {
+      const start = new Date(2000, 0, 1)
       return { from: start, to: endOfToday }
     }
   }

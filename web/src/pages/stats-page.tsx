@@ -8,6 +8,7 @@ import {
   getPreviousPeriod,
   type StatsDateFilter,
   type DashboardAggregated,
+  type DashboardStats,
 } from '@/lib/dashboard-utils'
 import { StatsFilterBar } from './stats/stats-filter-bar'
 import { KpiCards } from './stats/kpi-cards'
@@ -31,18 +32,42 @@ function StatsSkeletons() {
   )
 }
 
-function EmptyState() {
+function EmptyState({ message = 'Chưa có dữ liệu trong khoảng thời gian này' }: { message?: string }) {
   return (
     <div className="flex h-64 flex-col items-center justify-center text-muted-foreground">
-      <p className="text-sm">Chưa có dữ liệu trong khoảng thời gian này</p>
+      <p className="text-sm">{message}</p>
     </div>
   )
 }
 
 export function StatsPage() {
+  const [allTimeStats, setAllTimeStats] = useState<DashboardStats | null>(null)
+  const [allTimeLoading, setAllTimeLoading] = useState(true)
+
   const [filter, setFilter] = useState<StatsDateFilter>('7days')
   const [data, setData] = useState<DashboardAggregated | null>(null)
   const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadAllTime = async () => {
+      try {
+        const { from, to } = getStatsDateRange('all')
+        const current = await getDashboardData(from, to)
+        const aggregated = aggregateDashboard(
+          current,
+          { transactions: [], transactionItems: [], products: [] },
+          from,
+          to,
+        )
+        setAllTimeStats(aggregated.stats)
+      } catch {
+        toast.error('Không thể tải dữ liệu tổng quan')
+      } finally {
+        setAllTimeLoading(false)
+      }
+    }
+    loadAllTime()
+  }, [])
 
   const loadData = useCallback(async () => {
     setLoading(true)
@@ -74,9 +99,19 @@ export function StatsPage() {
         <h1 className="text-xl font-semibold">Thống kê</h1>
       </div>
 
-      <StatsFilterBar value={filter} onChange={setFilter} />
-
       <div className="flex-1 overflow-y-auto">
+        {/* All-time summary — always visible on top */}
+        {!allTimeLoading && allTimeStats && allTimeStats.orderCount > 0 && (
+          <div className="border-b px-6 py-4">
+            <p className="mb-3 text-sm font-semibold text-muted-foreground">Tổng quan</p>
+            <KpiCards stats={allTimeStats} />
+          </div>
+        )}
+
+        {/* Time filter tabs */}
+        <StatsFilterBar value={filter} onChange={setFilter} />
+
+        {/* Filtered section */}
         {loading ? (
           <StatsSkeletons />
         ) : !data || data.stats.orderCount === 0 ? (

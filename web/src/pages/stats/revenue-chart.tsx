@@ -4,14 +4,18 @@ import type { DailyRevenue } from '@/lib/dashboard-utils'
 
 interface RevenueChartProps {
   data: DailyRevenue[]
+  groupBy?: 'day' | 'month'
 }
 
 const fmt = new Intl.NumberFormat('vi-VN')
 
-export function RevenueChart({ data }: RevenueChartProps) {
+export function RevenueChart({ data, groupBy = 'day' }: RevenueChartProps) {
+  const isMonth = groupBy === 'month'
   return (
     <Card className="p-4">
-      <p className="mb-4 text-sm font-semibold">Doanh thu theo ngày</p>
+      <p className="mb-4 text-sm font-semibold">
+        {isMonth ? 'Doanh thu theo tháng' : 'Doanh thu theo ngày'}
+      </p>
       <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} barCategoryGap="30%">
           <XAxis
@@ -32,7 +36,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
           <Tooltip
             cursor={{ fill: 'hsl(var(--muted))' }}
             formatter={(value) => [`${fmt.format(value as number)}đ`, 'Doanh thu']}
-            labelFormatter={(label) => `Ngày ${label}`}
+            labelFormatter={(label) => isMonth ? `Tháng ${label}` : `Ngày ${label}`}
             contentStyle={{ fontSize: 12, borderRadius: 8 }}
           />
           <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
