@@ -48,6 +48,9 @@ export interface Transaction {
   notes?: string
   created_at?: string
   sale_date?: string
+  status: 'active' | 'voided'
+  voided_at?: string
+  voided_reason?: string
 }
 
 export interface TransactionEditLog {
@@ -105,6 +108,8 @@ export type DbTransaction = Transaction & {
   paymentMethod: 'cash' | 'qr'
   createdAt: string | undefined
   saleDate: string | undefined
+  voidedAt?: string
+  voidedReason?: string
 }
 
 export type DbTransactionEditLog = TransactionEditLog & {
@@ -156,6 +161,8 @@ export function mapTransaction(t: Transaction): DbTransaction {
     paymentMethod: t.payment_method,
     createdAt: t.created_at,
     saleDate: t.sale_date,
+    voidedAt: t.voided_at,
+    voidedReason: t.voided_reason,
   }
 }
 

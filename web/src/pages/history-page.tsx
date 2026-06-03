@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { Pencil } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { getTransactions, getTransactionItems } from '@/lib/supabase-operations'
+import { getTransactions, getTransactionItems, voidTransaction } from '@/lib/supabase-operations'
 import type { DbTransaction, DbTransactionItem } from '@/lib/supabase'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,6 +16,8 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 import { TransactionEditDialog } from './history/transaction-edit-dialog'
 
 const fmt = new Intl.NumberFormat('vi-VN')
@@ -49,6 +51,10 @@ export function HistoryPage() {
   const [detailLoading, setDetailLoading] = useState(false)
   const [editOpen, setEditOpen] = useState(false)
   const [editingTx, setEditingTx] = useState<DbTransaction | null>(null)
+  const [voidOpen, setVoidOpen] = useState(false)
+  const [voidTarget, setVoidTarget] = useState<DbTransaction | null>(null)
+  const [voidReason, setVoidReason] = useState('')
+  const [voidLoading, setVoidLoading] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -87,6 +93,23 @@ export function HistoryPage() {
 
   const handleItemsUpdated = (items: DbTransactionItem[]) => {
     setTxItems(items)
+  }
+
+  const handleVoid = async () => {
+    if (!voidTarget || !voidReason.trim()) return
+    setVoidLoading(true)
+    try {
+      await voidTransaction(voidTarget.id, voidReason.trim())
+      toast.success(`Đã huỷ hoá đơn ${voidTarget.transactionCode}`)
+      setVoidOpen(false)
+      setVoidTarget(null)
+      setSelectedTx(null)
+      load()
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Không thể huỷ hoá đơn')
+    } finally {
+      setVoidLoading(false)
+    }
   }
 
   const totalRevenue = transactions.reduce((sum, t) => sum + t.totalAmount, 0)
@@ -240,18 +263,35 @@ export function HistoryPage() {
             </div>
           )}
           <DialogFooter>
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex gap-1.5"
-              onClick={() => {
-                setEditingTx(selectedTx)
-                setEditOpen(true)
-              }}
-            >
-              <Pencil className="h-3.5 w-3.5" />
-              Chỉnh sửa
-            </Button>
+            {selectedTx?.status !== 'voided' && (
+              <>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="flex gap-1.5"
+                  onClick={() => {
+                    setVoidTarget(selectedTx)
+                    setVoidReason('')
+                    setVoidOpen(true)
+                  }}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                  Huỷ đơn
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex gap-1.5"
+                  onClick={() => {
+                    setEditingTx(selectedTx)
+                    setEditOpen(true)
+                  }}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                  Chỉnh sửa
+                </Button>
+              </>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -265,6 +305,55 @@ export function HistoryPage() {
         onSaved={handleEditSaved}
         onItemsUpdated={handleItemsUpdated}
       />
+
+      {/* Void confirm dialog */}
+      <Dialog open={voidOpen} onOpenChange={(o) => !o && setVoidOpen(false)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Huỷ hoá đơn</DialogTitle>
+          </DialogHeader>
+          {voidTarget && (
+            <div className="space-y-4 text-sm">
+              <div className="rounded-md border bg-muted/40 p-3 space-y-1">
+                <p className="font-medium">{voidTarget.transactionCode}</p>
+                <p className="text-muted-foreground">
+                  Tổng tiền: <span className="font-semibold text-foreground">{fmt.format(voidTarget.totalAmount)}₫</span>
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="void-reason">
+                  Lý do huỷ <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  id="void-reason"
+                  placeholder="Vd: Nhập sai hoá đơn, sai khách hàng..."
+                  value={voidReason}
+                  onChange={(e) => setVoidReason(e.target.value)}
+                  rows={3}
+                  className="resize-none"
+                />
+              </div>
+
+              <p className="text-xs text-muted-foreground">
+                Hành động này sẽ hoàn thuốc về kho và không thể hoàn tác.
+              </p>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setVoidOpen(false)}>
+              Huỷ
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleVoid}
+              disabled={voidLoading || !voidReason.trim()}
+            >
+              {voidLoading ? 'Đang xử lý...' : 'Xác nhận huỷ'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

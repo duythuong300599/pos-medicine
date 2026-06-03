@@ -284,7 +284,7 @@ export async function getTransactions(filter: {
   from?: number // timestamp ms
   to?: number // timestamp ms
 }): Promise<DbTransaction[]> {
-  let query = supabase.from('transactions').select('*').order('sale_date', { ascending: false })
+  let query = supabase.from('transactions').select('*').neq('status', 'voided').order('sale_date', { ascending: false })
 
   if (filter.from) {
     query = query.gte('sale_date', new Date(filter.from).toISOString())
@@ -327,6 +327,8 @@ export async function updateTransaction(
   input: UpdateTransactionInput,
   original: DbTransaction,
 ): Promise<DbTransaction> {
+  if (original.status === 'voided') throw new Error('Không thể chỉnh sửa hoá đơn đã huỷ')
+
   const patch: Record<string, unknown> = {}
   const logs: { field_name: string; old_value: string | null; new_value: string | null }[] = []
 
@@ -492,6 +494,73 @@ export async function updateTransactionItemPrices(
   return updatedTx
 }
 
+/**
+ * Huỷ hoá đơn: hoàn kho từng sản phẩm, đánh dấu voided, giữ nguyên audit trail.
+ */
+export async function voidTransaction(
+  id: string,
+  reason: string,
+): Promise<DbTransaction> {
+  // 1. Lấy transaction + items
+  const { data: tx, error: txErr } = await supabase
+    .from('transactions')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if (txErr) throw txErr
+  if (tx.status === 'voided') throw new Error('Hoá đơn đã bị huỷ trước đó')
+
+  const { data: items, error: itemsErr } = await supabase
+    .from('transaction_items')
+    .select('*')
+    .eq('transaction_id', id)
+  if (itemsErr) throw itemsErr
+
+  // 2. Hoàn kho từng sản phẩm + tạo inventory log
+  for (const item of items ?? []) {
+    const { data: prod, error: prodErr } = await supabase
+      .from('products')
+      .select('stock_quantity')
+      .eq('id', item.product_id)
+      .single()
+    if (prodErr) throw prodErr
+
+    const qtyBefore = prod.stock_quantity
+    const qtyAfter = qtyBefore + item.quantity
+
+    const { error: updateErr } = await supabase
+      .from('products')
+      .update({ stock_quantity: qtyAfter, updated_at: new Date().toISOString() })
+      .eq('id', item.product_id)
+    if (updateErr) throw updateErr
+
+    const { error: logErr } = await supabase.from('inventory_logs').insert({
+      product_id: item.product_id,
+      change_quantity: item.quantity,
+      quantity_before: qtyBefore,
+      quantity_after: qtyAfter,
+      reason: 'void_return',
+      reference_id: id,
+    })
+    if (logErr) throw logErr
+  }
+
+  // 3. Đánh dấu voided
+  const { data: updated, error: voidErr } = await supabase
+    .from('transactions')
+    .update({
+      status: 'voided',
+      voided_at: new Date().toISOString(),
+      voided_reason: reason,
+    })
+    .eq('id', id)
+    .select()
+    .single()
+  if (voidErr) throw voidErr
+
+  return mapTransaction(updated)
+}
+
 export async function getTransactionEditLogs(transactionId: string): Promise<DbTransactionEditLog[]> {
   const { data, error } = await supabase
     .from('transaction_edit_logs')
@@ -553,6 +622,7 @@ export async function getDashboardData(from: Date, to: Date): Promise<DashboardR
   const { data: txRaw, error: txErr } = await supabase
     .from('transactions')
     .select('*')
+    .neq('status', 'voided')
     .gte('created_at', fromISO)
     .lte('created_at', toISO)
     .order('created_at', { ascending: true })
