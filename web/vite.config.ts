@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: process.env.GITHUB_PAGES ? '/pos-medicine/' : '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
