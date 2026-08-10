@@ -115,8 +115,9 @@ function computeDailyRevenue(
     }
 
     for (const tx of transactions) {
-      if (!tx.createdAt) continue
-      const key = format(startOfMonth(new Date(tx.createdAt)), 'MM/yyyy')
+      const txDate = tx.saleDate ?? tx.createdAt
+      if (!txDate) continue
+      const key = format(startOfMonth(new Date(txDate)), 'MM/yyyy')
       bucketMap.set(key, (bucketMap.get(key) ?? 0) + tx.totalAmount)
     }
 
@@ -130,8 +131,9 @@ function computeDailyRevenue(
   }
 
   for (const tx of transactions) {
-    if (!tx.createdAt) continue
-    const key = format(startOfDay(new Date(tx.createdAt)), 'dd/MM')
+    const txDate = tx.saleDate ?? tx.createdAt
+    if (!txDate) continue
+    const key = format(startOfDay(new Date(txDate)), 'dd/MM')
     bucketMap.set(key, (bucketMap.get(key) ?? 0) + tx.totalAmount)
   }
 

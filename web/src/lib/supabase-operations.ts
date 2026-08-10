@@ -623,9 +623,9 @@ export async function getDashboardData(from: Date, to: Date): Promise<DashboardR
     .from('transactions')
     .select('*')
     .neq('status', 'voided')
-    .gte('created_at', fromISO)
-    .lte('created_at', toISO)
-    .order('created_at', { ascending: true })
+    .gte('sale_date', fromISO)
+    .lte('sale_date', toISO)
+    .order('sale_date', { ascending: true })
   if (txErr) throw txErr
 
   const transactions = (txRaw ?? []).map(mapTransaction)
