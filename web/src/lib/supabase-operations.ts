@@ -283,8 +283,21 @@ export async function createTransaction(input: CreateTransactionInput): Promise<
 export async function getTransactions(filter: {
   from?: number // timestamp ms
   to?: number // timestamp ms
+  medicineName?: string // LIKE theo tên thuốc trong transaction_items
 }): Promise<DbTransaction[]> {
-  let query = supabase.from('transactions').select('*').neq('status', 'voided').order('sale_date', { ascending: false })
+  const keyword = filter.medicineName?.trim()
+  // !inner: chỉ giữ hoá đơn có ít nhất 1 dòng thuốc khớp
+  let query = supabase
+    .from('transactions')
+    // cast '*': cột embed chỉ dùng để lọc, mapTransaction bỏ qua; tránh parser type của supabase-js lỗi với select động
+    .select((keyword ? '*, transaction_items!inner(product_name)' : '*') as '*')
+    .neq('status', 'voided')
+    .order('sale_date', { ascending: false })
+
+  if (keyword) {
+    const escaped = keyword.replace(/[\\%_]/g, '\\$&')
+    query = query.ilike('transaction_items.product_name', `%${escaped}%`)
+  }
 
   if (filter.from) {
     query = query.gte('sale_date', new Date(filter.from).toISOString())

@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Search, Trash2, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { getTransactions, getTransactionItems, voidTransaction } from '@/lib/supabase-operations'
 import type { DbTransaction, DbTransactionItem } from '@/lib/supabase'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -46,6 +47,8 @@ export function HistoryPage() {
   const [transactions, setTransactions] = useState<DbTransaction[]>([])
   const [loading, setLoading] = useState(true)
   const [dateFilter, setDateFilter] = useState<DateFilter>('today')
+  const [searchInput, setSearchInput] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const [selectedTx, setSelectedTx] = useState<DbTransaction | null>(null)
   const [txItems, setTxItems] = useState<DbTransactionItem[]>([])
   const [detailLoading, setDetailLoading] = useState(false)
@@ -59,19 +62,26 @@ export function HistoryPage() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const range = getDateRange(dateFilter)
-      const data = await getTransactions(range)
+      // Đang tìm kiếm thì bỏ qua bộ lọc ngày → tìm trong toàn bộ thời gian
+      const range = searchTerm ? {} : getDateRange(dateFilter)
+      const data = await getTransactions({ ...range, medicineName: searchTerm })
       setTransactions(data)
     } catch {
       toast.error('Không thể tải lịch sử giao dịch')
     } finally {
       setLoading(false)
     }
-  }, [dateFilter])
+  }, [dateFilter, searchTerm])
 
   useEffect(() => {
     load()
   }, [load])
+
+  // Debounce ô tìm kiếm để tránh gọi API mỗi lần gõ phím
+  useEffect(() => {
+    const timer = setTimeout(() => setSearchTerm(searchInput.trim()), 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleOpenDetail = async (tx: DbTransaction) => {
     setSelectedTx(tx)
@@ -127,6 +137,27 @@ export function HistoryPage() {
         <h1 className="text-xl font-semibold">Lịch sử giao dịch</h1>
       </div>
 
+      {/* Search by medicine name */}
+      <div className="relative border-b px-6 py-3">
+        <Search className="pointer-events-none absolute left-9 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Tìm hoá đơn theo tên thuốc..."
+          className="pl-9 pr-9"
+        />
+        {searchInput && (
+          <button
+            type="button"
+            aria-label="Xoá tìm kiếm"
+            onClick={() => setSearchInput('')}
+            className="absolute right-9 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+
       {/* Filter tabs */}
       <div className="flex gap-1.5 border-b px-6 py-3">
         {filters.map((f) => (
@@ -135,7 +166,7 @@ export function HistoryPage() {
             onClick={() => setDateFilter(f.value)}
             className={[
               'rounded-full px-3 py-1 text-xs font-medium transition-colors',
-              dateFilter === f.value
+              dateFilter === f.value && !searchTerm
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80',
             ].join(' ')}
@@ -149,7 +180,7 @@ export function HistoryPage() {
       {transactions.length > 0 && (
         <div className="flex gap-4 border-b px-6 py-3 text-sm">
           <span className="text-muted-foreground">
-            {transactions.length} giao dịch
+            {transactions.length} giao dịch{searchTerm && ' (tất cả thời gian)'}
           </span>
           <span className="font-semibold text-primary">
             Tổng: {fmt.format(totalRevenue)}₫
@@ -165,7 +196,7 @@ export function HistoryPage() {
           </div>
         ) : transactions.length === 0 ? (
           <div className="flex h-40 items-center justify-center text-sm text-muted-foreground">
-            Chưa có giao dịch nào
+            {searchTerm ? `Không có hoá đơn nào chứa thuốc "${searchTerm}"` : 'Chưa có giao dịch nào'}
           </div>
         ) : (
           <div className="divide-y">
